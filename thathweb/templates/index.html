@@ -1,0 +1,26 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<div class="row">
+    <div class="span7">
+        <h2>Recent Writings</h2>
+        <div class="well">
+            {% for post in posts %}
+                <h3><a href="{% url nacha.posts.page pk=post.id %}">{{ post.title }}</a></h3>
+                {{ post.text|safe|truncatechars:400 }}
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="span5">
+        <h2>Music</h2>
+        <div class="well">
+            {% for song in songs %}
+                {{ song.body|safe }}
+                <hr>
+            {% endfor %} 
+        </div>
+    </div>
+</div>
+
+{% endblock %}

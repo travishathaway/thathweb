@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Generator</h2>
+<hr>
+<h3>Header Information</h3>
+<table class="table">
+    <thead>
+        {% for field in form %}
+        <th>{{ field.label }}</th>
+        {% endfor %}
+    </thead>
+    <tbody>
+        <tr>
+        {% for field in form %}
+        <td>{{ field }}</td>
+        {% endfor %}
+        </tr>
+    </tbody>
+</table>
+<button id="add-batch" class="btn btn-success"><i class="icon-plus icon-white"></i> Add Batch</button>
+<hr>
+
+<div id="batches" style="margin-left: 25px; display: none">
+    <h3>Batch Information</h3>
+</div>
+
+<div class="modal hide fade" id="confirm-modal">
+    <div class="modal-header">
+        <h3>Confirm</h3>
+    </div>
+    <div class="modal-body">
+        <p></p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn modal-cancel">Cancel</a>
+        <a href="#" class="btn btn-primary modal-yes">Yes</a>
+    </div>
+</div>
+
+<div class="alert alert-error hide">
+<button type="button" class="close">×</button>
+    <div class="error-text">
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script>
+    $(document).ready(function() {
+        var batch_number = 1;
+
+        $('.alert .close').on('click', function() {
+            $('.alert').hide();
+        });
+
+        function displayError(message){
+            $('.alert .error-text').text(message);
+            $('.alert').css({
+                'position' : 'fixed',
+                'top'      : '20px',
+                'right'    : '20px',
+                'width'    : '300px',
+            });
+            $('.alert').show();
+        }
+
+        function removeItemEvent(id, resource, message){
+
+            $('#confirm-modal .modal-body p').text(message);
+            $('#confirm-modal .modal-cancel').on('click', function() {
+                $('#confirm-modal').modal('hide');
+                $('#confirm-modal .btn').off("click");
+            });
+
+            $('#confirm-modal .modal-yes').on('click', function() {
+                resource.remove();
+
+                if( $('#batches .batch').length < 1 ){
+                    $('#batches').hide();
+                }
+
+                $('#confirm-modal').modal('hide');
+                $('#confirm-modal .btn').off("click");
+            });
+
+            $('#confirm-modal').modal();
+
+        }
+
+        function addEntryEvent(id){
+
+        }
+
+        $("#add-batch").on('click', function() {
+            $.get('{% url nacha.nacha_creator.gen.batch %}', function(data) {
+                $('#batches').append(data);
+                $('#batches').show();
+                $('#batches .batch').last().attr({'id' : 'batch-'+batch_number});
+
+                $('#batch-'+batch_number+' .remove-batch').on('click', function(){
+                    var id = $(this).closest('.batch').attr('id');
+                    var resource = $('#'+id);
+                    var message = "Are you sure you want to remove this batch?";
+                    removeItemEvent(id, resource, message);
+                });
+
+                $('#batch-'+batch_number+' #id_desc_date').datepicker();
+                $('#batch-'+batch_number+' #id_eff_ent_date').datepicker();
+
+                $('#batch-'+batch_number+' .add-entry').on('click', function(){
+                    var id = $(this).closest('.batch').attr('id');
+                    var code = $('#'+id+' #id_std_ent_cls_code').val();
+
+                    if( code == '' ){
+                        displayError('Please choose Std ent cls code before adding entry'); 
+                    } else {
+                        $.get('{% url nacha.nacha_creator.gen.entry %}?std_ent_cls_code='+code, function(data){
+                            $('#'+id).append(data);
+                        }).complete( function() {
+                            $('#'+id+' .entry .remove-entry').last().on('click', function() {
+                                var message = "Are you sure you want to remove this entry?";
+                                removeItemEvent(id, $(this).closest('.entry'), message);
+                            });
+                        });
+
+                        $('#'+id+' #id_std_ent_cls_code').attr({'disabled' : 'disabled'});
+                    }
+                });
+
+                batch_number += 1;
+            });
+        });
+    });
+</script>
+{% endblock %}

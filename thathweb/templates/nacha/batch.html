@@ -1,0 +1,14 @@
+<div class="batch">
+    <div class="batch-fields">
+        {% for field in form %}
+            <div class="field-left">
+                <label for="{{ field.name }}"><strong>{{ field.label }}</strong></label>
+                {{ field }}
+            </div>
+        {% endfor %}
+        <br style="clear: both">
+        <button class="btn btn-success add-entry"><i class="icon-plus icon-white"></i> Add Entry</button>
+        <button class="btn btn-danger pull-right remove-batch"><i class="icon-remove icon-white"></i> Remove</button>
+        <hr />
+    </div>
+</div>

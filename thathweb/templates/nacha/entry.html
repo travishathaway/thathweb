@@ -1,0 +1,10 @@
+<div class="entry" style="margin-left: 50px" >
+    {% for field in form %}
+        <div class="field-left">
+            <label for="{{ field.name }}"><strong>{{ field.label }}</strong></label>
+            {{ field }}
+        </div>
+    {% endfor %}
+    <a class="btn btn-danger remove-entry pull-right"><i class="icon-remove icon-white"></i> Remove</a>
+    <hr style="clear: both" /> 
+</div>

@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block css %} 
+    {{ block.super }}
+    <style>
+        ul.user-to-group {
+            margin: 0;
+            padding: 0;
+        }
+        ul.user-to-group li {
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 2px;
+            margin: 2px;
+            list-style: none;
+            width: 75px;
+            float: left;
+            background-color: gray;
+        }
+        .user-to-group li:hover {
+            cursor: move;
+        }
+        .user-to-group li:active {
+            cursor: move;
+        }
+
+        .user-to-group {
+            min-height: 100px;
+            border: dashed black 1px;
+        }
+        #trash-can {
+            background: url('/static/img/trash-can.png') no-repeat;
+            background-position: 34px;
+            background-size: 75px;
+        }
+        #trash-can:hover {  
+            background: url('/static/img/trash-can-red.png') no-repeat;
+            background-position: 34px;
+            background-size: 75px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+<div class="row-fluid">
+<div class="pull-right">
+    <button id="save-btn" class="btn">Save</button>
+</div>
+<div class="row-fluid">
+    <div class="span8">
+        <h2>Users</h2>
+        <hr/>
+        <ul id="user-list" class="user-to-group">
+        {% for user in users %}
+            <li id="user-{{ user }}">{{ user }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div class="span3">
+        <h2>Trash Can</h2>
+        <hr>
+        <ul id="trash-can" class="user-to-group">
+        </ul>
+    </div>
+</div>
+<h2>Groups</h2>
+<hr />
+<div class="row-fluid">
+    {% for group in groups %}
+        <div class="span3">
+            <h3>{{ group.name }}</h3>
+            <ul id="group-{{ group }}" class="user-to-group group-list">
+                <input id="id-group-{{ group.name|lower }}" type="hidden" value="{{ group.id }}" />
+                {% for user in users %}
+                    {% if user.groups.values %}
+                        {% for group_info in  user.groups.values %}
+                            {% if  group_info.id == group.id %}
+                                <li id="user-{{ user.username }}">{{ user.username }}</li>
+                            {% endif %}
+                        {% endfor %}   
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+{% csrf_token %} 
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
+    <script>
+        var only_one = function(event, ui, that){
+            //Checks if the element already exists. If it does remove it. We don't want duplicates
+            var new_id = ui.item[0].id;
+            var old_user = $(that).find("#"+new_id);
+            if ( old_user.length > 1 ){
+                $(old_user[0]).remove();
+            }
+        }
+            
+        $( "#user-list" ).sortable({
+            connectWith: ".group-list",
+            receive : function(event, ui){
+                only_one(event,ui,this);
+            },
+            remove : function(event, ui){
+                $(ui.item[0]).clone().appendTo(this);
+            }
+       });
+        $(".group-list").sortable({
+            connectWith  : "#trash-can",
+            receive : function(event, ui){
+                only_one(event,ui, this);
+            }
+        });
+        $("#trash-can").sortable({
+            receive : function(event, ui){
+                $(this).children('li').remove();
+            }
+        });
+
+        $("#save-btn").click(function() {
+            this.innerText = 'Saving...';
+            this.disabled = true;
+            var save_button = this;
+            var data = {};
+            $('.group-list').each(function(){
+                var group_id = $(this).children('input[type=hidden]')[0].value;
+                data[group_id] = '';
+                $("#"+this.id+" li").each(function(){
+                    data[group_id] += this.innerText+',';
+                });
+            });
+            data['csrfmiddlewaretoken'] = document.getElementsByName('csrfmiddlewaretoken')[0].value
+            $.ajax({
+                url : '{% url nacha.usertogroup.add %}',
+                type : 'post',
+                data : data,
+                dataType : 'json',
+                success : function(data){
+                    save_button.innerText = 'Save';
+                    save_button.disabled = false;
+                },
+                error : function(data,text,error){
+                    alert(text);
+                }
+            });
+        });
+
+    </script>
+
+{% endblock %}

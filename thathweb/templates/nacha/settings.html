@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Settings</h2>
+<p>These provide general settings for your nacha files</p>
+<form action="{% url nacha.nacha_creator.settings %}" method="post" />
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" />
+</form> 
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+
+<script>
+    
+
+</script>
+
+{% endblock %}
