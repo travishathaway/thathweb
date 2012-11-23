@@ -27,17 +27,17 @@ def get_menu():
             'display' : False,
             'submenu' : {
                 'settings' : {
-                    'url' : reverse('nacha.nacha_creator.settings'),
+                    'url' : reverse('thathweb.nacha_creator.settings'),
                     'active' : False,
                     'title'  : 'Settings',
                 },
                 'gen' : {
-                    'url' : reverse('nacha.nacha_creator.gen'),
+                    'url' : reverse('thathweb.nacha_creator.gen'),
                     'active' : False,
                     'title' : 'Generator',
                 },
                 'batches' : {
-                    'url' : reverse('nacha.nacha_creator.batches'),
+                    'url' : reverse('thathweb.nacha_creator.batches'),
                     'active' : False,
                     'title' : 'Batches',
                 },
@@ -48,7 +48,7 @@ def get_menu():
 
 
 
-class NachaBaseView(TemplateView):
+class ThathwebBaseView(TemplateView):
     '''
     Base view for the site. Everything on the site
     requires you to be logged in to do anything 
@@ -57,14 +57,14 @@ class NachaBaseView(TemplateView):
     template_name = "base.html"
 
     def __init__(self,**kwargs):
-        super(NachaBaseView,self).__init__(**kwargs)
+        super(ThathwebBaseView,self).__init__(**kwargs)
         self.menu = get_menu()
 
     @method_decorator(login_required)
     def dispatch(self,*args,**kwargs):
-        return super(NachaBaseView, self).dispatch(*args,**kwargs)
+        return super(ThathwebBaseView, self).dispatch(*args,**kwargs)
 
-class NachaBaseViewNoAuth(TemplateView):
+class ThathwebBaseViewNoAuth(TemplateView):
     '''
     Base view for the site. Everything on the site
     requires you to be logged in to do anything 
@@ -73,14 +73,14 @@ class NachaBaseViewNoAuth(TemplateView):
     template_name = "base.html"
 
     def __init__(self,**kwargs):
-        super(NachaBaseViewNoAuth,self).__init__(**kwargs)
+        super(ThathwebBaseViewNoAuth,self).__init__(**kwargs)
         self.menu = get_menu()
 
     def dispatch(self,*args,**kwargs):
-        return super(NachaBaseViewNoAuth, self).dispatch(*args,**kwargs)
+        return super(ThathwebBaseViewNoAuth, self).dispatch(*args,**kwargs)
 
 
-class HomePage(NachaBaseViewNoAuth):
+class HomePage(ThathwebBaseViewNoAuth):
     """
     Home page view.  Recent posts and songs are shown here
     """
@@ -93,7 +93,7 @@ class HomePage(NachaBaseViewNoAuth):
         self.menu['home']['active'] = True
         return self.render_to_response({'menu' : self.menu, 'posts' : posts, 'songs' : songs })
 
-class LabPage(NachaBaseViewNoAuth):
+class LabPage(ThathwebBaseViewNoAuth):
     """
     Page to show all the various "Lab" items.  Like my nacha generator
     """
