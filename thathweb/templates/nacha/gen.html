@@ -94,7 +94,7 @@
         }
 
         $("#add-batch").on('click', function() {
-            $.get('{% url nacha.nacha_creator.gen.batch %}', function(data) {
+            $.get('{% url thathweb.nacha_creator.gen.batch %}', function(data) {
                 $('#batches').append(data);
                 $('#batches').show();
                 $('#batches .batch').last().attr({'id' : 'batch-'+batch_number});
@@ -116,7 +116,7 @@
                     if( code == '' ){
                         displayError('Please choose Std ent cls code before adding entry'); 
                     } else {
-                        $.get('{% url nacha.nacha_creator.gen.entry %}?std_ent_cls_code='+code, function(data){
+                        $.get('{% url thathweb.nacha_creator.gen.entry %}?std_ent_cls_code='+code, function(data){
                             $('#'+id).append(data);
                         }).complete( function() {
                             $('#'+id+' .entry .remove-entry').last().on('click', function() {

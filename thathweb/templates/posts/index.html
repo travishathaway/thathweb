@@ -3,7 +3,7 @@
 {% block content %}
 <h2>{{ pk }}</h2>
 {% for post in posts %}
-    <h3><a href="{% url nacha.posts.page pk=post.id %}">{{ post.title }}</a></h3>
+    <h3><a href="{% url thathweb.posts.page pk=post.id %}">{{ post.title }}</a></h3>
     {{ post.text|safe|truncatechars:400 }}
 {% endfor %}
 

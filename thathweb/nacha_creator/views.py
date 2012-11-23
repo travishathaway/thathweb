@@ -4,9 +4,9 @@ from django.core.urlresolvers import reverse
 
 import forms
 import models
-from nacha.views import NachaBaseView
+from thathweb.views import ThathwebBaseView
 
-class NachaBase(NachaBaseView):
+class ThathwebBase(ThathwebBaseView):
 
     template_name = "nacha/index.html"
 
@@ -15,7 +15,7 @@ class NachaBase(NachaBaseView):
         self.menu['nacha']['active'] = True
         return self.render_to_response({'user' : user, 'menu' : self.menu })
 
-class NachaSettings(NachaBaseView):
+class NachaSettings(ThathwebBaseView):
 
     template_name = 'nacha/settings.html'
 
@@ -45,11 +45,11 @@ class NachaSettings(NachaBaseView):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('nacha.nacha_creator.settings'))
+            return HttpResponseRedirect(reverse('thathweb.nacha_creator.settings'))
         else:
             return self.render_to_response({'menu' : self.menu, 'form' : form.as_p()})
 
-class NachaCreate(NachaBaseView):
+class NachaCreate(ThathwebBaseView):
 
     template_name = "nacha/gen.html"
 
@@ -71,7 +71,7 @@ class NachaCreate(NachaBaseView):
         form = forms.NachaHeader(instance=header)
         return self.render_to_response({'menu' : self.menu, 'form' : form.visible_fields()})
 
-class NachaCreateBatch(NachaBaseView):
+class NachaCreateBatch(ThathwebBaseView):
 
     template_name = "nacha/batch.html"
 
@@ -85,7 +85,7 @@ class NachaCreateBatch(NachaBaseView):
 
         return self.render_to_response({'form' : form.visible_fields()})
 
-class NachaCreateRecordEntry(NachaBaseView):
+class NachaCreateRecordEntry(ThathwebBaseView):
 
     template_name = "nacha/entry.html"
 
@@ -96,7 +96,7 @@ class NachaCreateRecordEntry(NachaBaseView):
 
         return self.render_to_response({'form' : form})
 
-class NachaBatches(NachaBaseView):
+class NachaBatches(ThathwebBaseView):
 
     template_name = "nacha/batches.html"
 

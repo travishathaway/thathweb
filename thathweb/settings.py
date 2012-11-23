@@ -15,9 +15,9 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'django_nacha',                      # Or path to database file if using sqlite3.
-        'USER': 'nacha',                      # Not used with sqlite3.
-        'PASSWORD': 'nacha',                  # Not used with sqlite3.
+        'NAME': 'thathweb',                      # Or path to database file if using sqlite3.
+        'USER': 'thathweb',                      # Not used with sqlite3.
+        'PASSWORD': 'thathweb',                  # Not used with sqlite3.
         'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -59,7 +59,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/home/thath/dev/video-reviewer/static/'
+STATIC_ROOT = '/home/thath/dev/thathweb/static/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -102,7 +102,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.debug',
     'django.core.context_processors.static',
-    'nacha.context_processors.site_name',
+    'thathweb.context_processors.site_name',
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
 )
@@ -115,7 +115,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'nacha.urls'
+ROOT_URLCONF = 'thathweb.urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -137,8 +137,8 @@ INSTALLED_APPS =(
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'tinymce',
-    'nacha.nacha_creator',
-    'nacha.posts',
+    'thathweb.nacha_creator',
+    'thathweb.posts',
     'south',
     'menu',
     'tastypie',

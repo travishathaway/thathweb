@@ -138,7 +138,7 @@
             });
             data['csrfmiddlewaretoken'] = document.getElementsByName('csrfmiddlewaretoken')[0].value
             $.ajax({
-                url : '{% url nacha.usertogroup.add %}',
+                url : '{% url thathweb.usertogroup.add %}',
                 type : 'post',
                 data : data,
                 dataType : 'json',

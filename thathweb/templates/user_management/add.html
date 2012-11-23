@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<form action="{% url nacha.user.add %}" method="post">  
+<form action="{% url thathweb.user.add %}" method="post">  
     {% csrf_token %}
     {{ form.as_p }} 
 

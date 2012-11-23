@@ -1,10 +1,10 @@
-from nacha.views import NachaBaseView
+from thathweb.views import ThathwebBaseView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import simplejson
 
-class ManagementBase(NachaBaseView):
+class ManagementBase(ThathwebBaseView):
 
     template_name = "user_management/user_management_base.html"
 
@@ -15,7 +15,7 @@ class ManagementBase(NachaBaseView):
 
         return self.render_to_response(context)
 
-class AddUser(NachaBaseView):
+class AddUser(ThathwebBaseView):
 
     template_name = 'user_management/add.html'
 
@@ -39,11 +39,11 @@ class AddUser(NachaBaseView):
             menu['manage']['submenu']['user']['active'] = True
             return self.render_to_response({'form' : form, 'menu' : menu})
 
-class ListUser(NachaBaseView):
+class ListUser(ThathwebBaseView):
 
     template_name = "user_management/list.html" 
 
-class AddToGroup(NachaBaseView):
+class AddToGroup(ThathwebBaseView):
 
     template_name = "user_management/add_user_to_group.html"
 

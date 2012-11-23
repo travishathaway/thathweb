@@ -1,9 +1,9 @@
 from django.http import Http404
 
-from nacha.views import NachaBaseViewNoAuth
+from thathweb.views import ThathwebBaseViewNoAuth
 import models
 
-class Posts(NachaBaseViewNoAuth):
+class Posts(ThathwebBaseViewNoAuth):
     template_name = "posts/index.html"
 
     def __init__(self,**kwargs):
@@ -15,7 +15,7 @@ class Posts(NachaBaseViewNoAuth):
         return self.render_to_response({'menu' : self.menu, 'posts' : posts, 'pk' : kwargs.get('pk') })
 
 
-class PostsDetail(NachaBaseViewNoAuth):
+class PostsDetail(ThathwebBaseViewNoAuth):
 
     template_name = "posts/detail.html"
 

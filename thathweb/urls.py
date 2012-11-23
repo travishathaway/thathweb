@@ -10,12 +10,12 @@ def bad_request(request):
 
 urlpatterns = patterns('',
     url(r'^$', HomePage.as_view()),
-    url(r'^lab/$', LabPage.as_view(), name='nacha.lab'),
+    url(r'^lab/$', LabPage.as_view(), name='thathweb.lab'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/', include('nacha.accounts.urls')),
+    url(r'^accounts/', include('thathweb.accounts.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
-    url(r'^posts/', include('nacha.posts.urls')),
-    url(r'^nacha/',include('nacha.nacha_creator.urls')),
+    url(r'^posts/', include('thathweb.posts.urls')),
+    url(r'^nacha/',include('thathweb.nacha_creator.urls')),
     url(r'^admin_tools/', include('admin_tools.urls')),
 )
 

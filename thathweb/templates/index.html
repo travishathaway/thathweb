@@ -6,7 +6,7 @@
         <h2>Recent Writings</h2>
         <div class="well">
             {% for post in posts %}
-                <h3><a href="{% url nacha.posts.page pk=post.id %}">{{ post.title }}</a></h3>
+                <h3><a href="{% url thathweb.posts.page pk=post.id %}">{{ post.title }}</a></h3>
                 {{ post.text|safe|truncatechars:400 }}
                 <hr>
             {% endfor %}
