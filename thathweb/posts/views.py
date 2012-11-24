@@ -6,13 +6,9 @@ import models
 class Posts(ThathwebBaseViewNoAuth):
     template_name = "posts/index.html"
 
-    def __init__(self,**kwargs):
-        super(Posts,self).__init__(**kwargs)
-        self.menu['posts']['active'] = True;
-
     def get(self,request,*args,**kwargs):
         posts = models.Post.objects.all()
-        return self.render_to_response({'menu' : self.menu, 'posts' : posts, 'pk' : kwargs.get('pk') })
+        return self.render_to_response({'posts' : posts, 'pk' : kwargs.get('pk') })
 
 
 class PostsDetail(ThathwebBaseViewNoAuth):
@@ -24,4 +20,4 @@ class PostsDetail(ThathwebBaseViewNoAuth):
             post = models.Post.objects.get(id=kwargs.get('pk'))
         except models.Post.DoesNotExist:
             raise Http404
-        return self.render_to_response({'post' : post, 'menu' : self.menu})
+        return self.render_to_response({'post' : post})

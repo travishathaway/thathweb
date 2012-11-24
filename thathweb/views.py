@@ -31,10 +31,10 @@ def get_menu():
                     'active' : False,
                     'title'  : 'Settings',
                 },
-                'gen' : {
+                'generate' : {
                     'url' : reverse('thathweb.nacha_creator.gen'),
                     'active' : False,
-                    'title' : 'Generator',
+                    'title' : 'Generate',
                 },
                 'batches' : {
                     'url' : reverse('thathweb.nacha_creator.batches'),
@@ -56,10 +56,6 @@ class ThathwebBaseView(TemplateView):
 
     template_name = "base.html"
 
-    def __init__(self,**kwargs):
-        super(ThathwebBaseView,self).__init__(**kwargs)
-        self.menu = get_menu()
-
     @method_decorator(login_required)
     def dispatch(self,*args,**kwargs):
         return super(ThathwebBaseView, self).dispatch(*args,**kwargs)
@@ -71,10 +67,6 @@ class ThathwebBaseViewNoAuth(TemplateView):
     '''
 
     template_name = "base.html"
-
-    def __init__(self,**kwargs):
-        super(ThathwebBaseViewNoAuth,self).__init__(**kwargs)
-        self.menu = get_menu()
 
     def dispatch(self,*args,**kwargs):
         return super(ThathwebBaseViewNoAuth, self).dispatch(*args,**kwargs)
@@ -90,8 +82,7 @@ class HomePage(ThathwebBaseViewNoAuth):
     def get(self,request,*args,**kwargs):
         posts = Post.objects.all()[:5]
         songs = SoundCloudSongs.objects.all()[:3]
-        self.menu['home']['active'] = True
-        return self.render_to_response({'menu' : self.menu, 'posts' : posts, 'songs' : songs })
+        return self.render_to_response({'posts' : posts, 'songs' : songs })
 
 class LabPage(ThathwebBaseViewNoAuth):
     """
@@ -101,5 +92,4 @@ class LabPage(ThathwebBaseViewNoAuth):
     template_name = "lab.html"
 
     def get(self, request, *args, **kwargs):
-        self.menu['lab']['active'] = True
-        return self.render_to_response({'menu' : self.menu});
+        return self.render_to_response({});

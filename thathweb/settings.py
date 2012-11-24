@@ -72,7 +72,7 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    '/home/thath/dev/nacha/nacha/static/',
+    '/home/thath/dev/thathweb/thathweb/static/',
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -103,6 +103,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.debug',
     'django.core.context_processors.static',
     'thathweb.context_processors.site_name',
+    'thathweb.context_processors.site_menu',
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
 )

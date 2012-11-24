@@ -12,17 +12,11 @@ class ThathwebBase(ThathwebBaseView):
 
     def get(self,request,*args,**kwargs):
         user = User.objects.get(id=request.user.id)
-        self.menu['nacha']['active'] = True
-        return self.render_to_response({'user' : user, 'menu' : self.menu })
+        return self.render_to_response({'user' : user})
 
 class NachaSettings(ThathwebBaseView):
 
     template_name = 'nacha/settings.html'
-
-    def __init__(self):
-        super(NachaSettings, self).__init__()
-        self.menu['nacha']['active'] = True
-        self.menu['nacha']['submenu']['settings']['active'] = True
 
     def get(self, request, *args, **kwargs):
         nacha_settings = models.NachaSettings.objects.all().filter(user_id=request.user.id)
@@ -32,7 +26,7 @@ class NachaSettings(ThathwebBaseView):
         else:
             form = forms.NachaSettings(instance=nacha_settings[0])
 
-        return self.render_to_response({'menu' : self.menu, 'form' : form.as_p()})
+        return self.render_to_response({'form' : form.as_p()})
 
     def post(self, request, *args, **kwargs):
         nacha_settings = models.NachaSettings.objects.all().filter(user_id=request.user.id)
@@ -47,16 +41,11 @@ class NachaSettings(ThathwebBaseView):
             form.save()
             return HttpResponseRedirect(reverse('thathweb.nacha_creator.settings'))
         else:
-            return self.render_to_response({'menu' : self.menu, 'form' : form.as_p()})
+            return self.render_to_response({ 'form' : form.as_p()})
 
 class NachaCreate(ThathwebBaseView):
 
     template_name = "nacha/gen.html"
-
-    def __init__(self):
-        super(NachaCreate, self).__init__()
-        self.menu['nacha']['active'] = True
-        self.menu['nacha']['submenu']['gen']['active'] = True
 
     def get(self, request, *args, **kwargs):
         settings = models.NachaSettings.objects.get(user=request.user)
@@ -69,7 +58,7 @@ class NachaCreate(ThathwebBaseView):
         header.immediate_dest_name   = settings.dest_name
 
         form = forms.NachaHeader(instance=header)
-        return self.render_to_response({'menu' : self.menu, 'form' : form.visible_fields()})
+        return self.render_to_response({'form' : form.visible_fields()})
 
 class NachaCreateBatch(ThathwebBaseView):
 
@@ -101,6 +90,4 @@ class NachaBatches(ThathwebBaseView):
     template_name = "nacha/batches.html"
 
     def get(self, request, *args, **kwargs):
-        self.menu['nacha']['active'] = True
-        self.menu['nacha']['submenu']['batches']['active'] = True
-        return self.render_to_response({'menu' : self.menu})
+        return self.render_to_response({})
