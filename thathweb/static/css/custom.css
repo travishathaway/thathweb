@@ -1,0 +1,71 @@
+body {
+    background: rgba(225,225,225,1);
+}
+
+a {
+    color: #A10B00;
+}
+
+a:hover {
+    color: #A10B00;
+} 
+
+.well {
+    background: white;
+}
+
+.front-banner {
+    height: 75px;
+    background: url('/static/img/water_cropped.jpg') no-repeat;
+    border-radius: 0px 0px 10px 10px;
+}
+
+.front-banner h1 a {
+    color: white;
+    background-color: rgba(128,128,128,0.5);
+    padding-right: 25px;
+    padding-left: 25px;
+    padding-bottom: 40px;
+    border-radius: 0px 0px 10px 0px;
+    text-decoration: none;
+}
+
+#main-nav {
+    margin-top: -35px;
+}
+
+#main-nav {
+    border-bottom: none;
+}
+
+#main-nav li.active a {
+    background-color: rgba(128,128,128,1);
+}
+
+#main-nav li a{
+    color: white;
+    font-size: 1.5em;
+    background-color: rgba(128,128,128,0.5);
+    border-radius: 0px 10px 0px 10px;
+    text-shadow: black;
+}
+
+#main-nav li a:hover {
+    background-color: rgba(128,128,128,1);
+}
+
+
+
+input {
+    width: auto;
+}
+
+select {
+    width: auto;
+}
+
+.field-left {
+    float: left;
+    margin: 5px;
+}
+
