@@ -70,6 +70,8 @@ class NachaCreateBatch(ThathwebBaseView):
         batch_header = models.NachaBatchHeader()
         batch_header.orig_stat_code = '1'
         batch_header.company_name = settings.origin_name[:12]
+        batch_header.company_id   = settings.origin_routing_number
+        batch_header.orig_dfi_id  = settings.dest_routing_number
         form = forms.NachaBatchHeader(instance=batch_header)
 
         return self.render_to_response({'form' : form.visible_fields()})

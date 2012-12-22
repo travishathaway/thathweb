@@ -2,6 +2,12 @@
 
 {% block content %}
 <h2>Generator</h2>
+<div id="nacha-controls" class="row">
+    <div class="nacha-controls-inner span4" data-spy="affix" data-offset-top="200">
+        <button class="btn btn-success">Save Your Batch</button>
+        <button id="create" class="btn btn-primary">Generate Nacha File</button>
+    </div>
+</div>
 <hr>
 <h3>Header Information</h3>
 <table class="table">
@@ -131,6 +137,23 @@
 
                 batch_number += 1;
             });
+        });
+        $('#create').on('click', function() {
+
+            var nacha_data = {};
+
+            nacha_data.batches= [];
+            
+            $('.batch').each( function() {
+                var batch = {};
+
+                
+            });
+
+            $('.batch').find('.input').each( function () {
+                nacha_data.batches
+            });
+
         });
     });
 </script>

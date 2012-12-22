@@ -17,11 +17,12 @@ class NachaBatchHeader(ModelForm):
 
     class Meta:
         model = models.NachaBatchHeader
-        exclude = ('user','nacha_header')
+        exclude = ('user','nacha_header','batch_id')
+
 
 class NachaRecordEntry(ModelForm):
 
-    base_set = ['transaction_code','recv_dfi_id','check_digit','dfi_acnt_num','amount']
+    base_set = ['transaction_code','recv_dfi_id','dfi_acnt_num','amount']
 
     
 
@@ -43,4 +44,6 @@ class NachaRecordEntry(ModelForm):
 
     class Meta:
         model = models.NachaRecordEntry
-        exclude = ('user','nacha_batch_header')
+        exclude = ('user','nacha_batch_header',)
+
+        

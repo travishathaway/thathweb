@@ -1,5 +1,11 @@
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Domine', serif;
+}
+li a {
+    font-family: 'Domine', serif;
+}
 body {
-    background: rgba(225,225,225,1);
+    background-image: url('/static/img/grid.png');
 }
 
 a {
@@ -8,7 +14,18 @@ a {
 
 a:hover {
     color: #A10B00;
-} 
+}
+
+#nacha-controls .nacha-controls-inner{
+    background-color: white;
+    padding: 5px;
+}
+
+#nacha-controls .affix {
+    top: 0px;
+    left: 0px;
+    
+}
 
 .well {
     background: white;
@@ -17,7 +34,6 @@ a:hover {
 .front-banner {
     height: 75px;
     background: url('/static/img/water_cropped.jpg') no-repeat;
-    border-radius: 0px 0px 10px 10px;
 }
 
 .front-banner h1 a {
@@ -29,12 +45,11 @@ a:hover {
     background-color: rgba(128,128,128,0.5);
     padding-right: 25px;
     padding-left: 25px;
-    padding-bottom: 39px;
-    border-radius: 0px 0px 10px 0px;
+    padding-bottom: 15px;
 }
 
 #main-nav {
-    margin-top: -35px;
+    margin-top: -48px;
 }
 
 #main-nav {
@@ -57,6 +72,10 @@ a:hover {
     background-color: rgba(128,128,128,1);
 }
 
+.content {
+    background-color: white;
+    padding: 10px;
+}
 
 
 input {
