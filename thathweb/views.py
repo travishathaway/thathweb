@@ -80,7 +80,7 @@ class HomePage(ThathwebBaseViewNoAuth):
     template_name = "index.html"
 
     def get(self,request,*args,**kwargs):
-        posts = Post.objects.all()[:5]
+        posts = Post.objects.all().order_by('-date')[:5]
         songs = SoundCloudSongs.objects.all()[:3]
         return self.render_to_response({'posts' : posts, 'songs' : songs })
 

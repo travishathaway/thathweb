@@ -5,9 +5,6 @@ admin.autodiscover()
 
 from views import HomePage, LabPage
 
-def bad_request(request):
-    return HttpResponseBadRequest("poopy butt")
-
 urlpatterns = patterns('',
     url(r'^$', HomePage.as_view()),
     url(r'^lab/$', LabPage.as_view(), name='thathweb.lab'),
