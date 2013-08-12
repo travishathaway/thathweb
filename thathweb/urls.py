@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('thathweb.accounts.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^posts/', include('thathweb.posts.urls')),
+    url(r'^pictures/', include('thathweb.pictures.urls')),
     url(r'^nacha/',include('thathweb.nacha_creator.urls')),
     url(r'^admin_tools/', include('admin_tools.urls')),
 )

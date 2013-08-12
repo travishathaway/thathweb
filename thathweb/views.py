@@ -20,6 +20,12 @@ def get_menu():
             'active': False,
             'display' : True,
         },
+        'pictures' : {
+            'url' : '/pictures/',
+            'title' : 'Pictures',
+            'active' : False,
+            'display' : True,
+        },
        'nacha'  : {
             'url' : '/nacha/',
             'active' : False,
