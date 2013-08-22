@@ -1,5 +1,8 @@
 {% extends "base.html" %} 
 
 {% block content %}
-    <h2>Pictures</h2>
+<h2>Pictures</h2>
+{% for pic in pictures %}
+<img src="{{ STATIC_URL}}{{ pic.path }}" title="{{pic.title}}" />
+{% endfor %}
 {% endblock %}
