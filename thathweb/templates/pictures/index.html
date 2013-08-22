@@ -5,7 +5,9 @@
     <div id="image-container">
     {% for pic in pictures %}
         <div class="picture">
-            <img src="{{ STATIC_URL}}{{ pic.thumbnail_path }}" title="{{pic.title}}" />
+            <a href="{{ STATIC_URL }}{{ pic.path }}" class="fancybox" rel="gallery" title="{{ pic.title }}">
+                <img src="{{ STATIC_URL}}{{ pic.thumbnail_path }}" title="{{pic.title}}" />
+            </a>
         </div>
     {% endfor %}
     </div>
@@ -17,9 +19,15 @@
     </div>
 {% endblock %}
 
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery.fancybox.css" type="text/css" media="screen" />
+{% endblock %}
+
 {% block js %}
     {{ block.super }}
     <script src="{{ STATIC_URL }}js/jquery.isotope.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.fancybox.pack.js"></script>
     <script src="{{ STATIC_URL }}js/angular/pictures/app.js"></script>
     <script src="{{ STATIC_URL }}js/angular/pictures/controllers.js"></script>
     <script>
@@ -28,6 +36,8 @@
             itemSelector : '.picture',
             layoutMode   : 'cellsByRow'
         });
+
+        $(".fancybox").fancybox();
     });
     </script>
 {% endblock %}
