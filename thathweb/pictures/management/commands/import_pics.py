@@ -1,8 +1,10 @@
-import os, re, Image
+import os, shutil, re, Image
 from datetime import datetime
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
+
+from thathweb.pictures.models import Picture
 
 class Command(BaseCommand):
     help = 'Imports pictures into the database and also creates thumbnails'
@@ -10,12 +12,9 @@ class Command(BaseCommand):
     nowstr = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
 
     def handle(self, *args, **options):
-        try:
-            imgs = os.listdir(settings.IMG_IMPORT_DIR)
-            imgs = [ settings.IMG_IMPORT_DIR+img for img in imgs ]
-        except OSError, e:
-            self.stderr.write(e)
-            return
+        self.initialize()
+
+        imgs = [ settings.UPLOAD_IMG_SRC_DIR+img for img in os.listdir(settings.UPLOAD_IMG_SRC_DIR) ]
 
         for img in imgs:
             # Find our image files
@@ -24,18 +23,41 @@ class Command(BaseCommand):
             if match:
                 self.stdout.write(img)
 
-                # Create the thumbnail
-                if not os.path.exists( 
-                    settings.STATIC_ROOT+ \
-                    '/img/uploads/thumbnails/'+self.nowstr
-                ):
+                thumb_dest = settings.UPLOAD_IMG_DEST_DIR + \
+                'thumbnails/thmb_'+os.path.basename(img)
 
-                    os.mkdir( settings.STATIC_ROOT + \
-                    '/img/uploads/thumbnails/'+self.nowstr)
+                dest = settings.UPLOAD_IMG_DEST_DIR + os.path.basename(img)
 
-                thumb_dest = settings.STATIC_ROOT + \
-                    '/img/uploads/thumbnails/'+self.nowstr+'/thmb_'+ \
-                    os.path.basename(img)
-                im = Image.open(img)
-                im.thumbnail(self.thumb_size, Image.ANTIALIAS)
-                im.save(thumb_dest, "JPEG")
+                # only create the new files if they don't already exist
+                if not os.path.exists(thumb_dest) and not os.path.exists(dest):
+                    # copy the original to it's new location
+                    shutil.copyfile(img, dest)
+
+                    # create the thumbnail image
+                    im = Image.open(img)
+                    im.thumbnail(self.thumb_size, Image.ANTIALIAS)
+                    im.save(thumb_dest, "JPEG")
+
+                    # make a database record
+                    p = Picture()
+                    p.title = os.path.basename(img)
+                    p.path  = 'uploads/'+os.path.basename(img)
+                    p.thumbnail_path = 'uploads/thumbnails/thmb_'+os.path.basename(img)
+                    p.save()
+
+                else:
+                    self.stderr.write(img+', already exists. Skipping')
+
+    def initialize(self):
+        if not os.path.exists(settings.UPLOAD_IMG_DEST_DIR):
+            # try to make it
+            try:
+                os.mkdir(settings.UPLOAD_IMG_DEST_DIR)
+            except OSError, e:
+                self.stderr.write(e.args)
+        if not os.path.exists(settings.UPLOAD_IMG_SRC_DIR):
+            # try to make it
+            try:
+                os.mkdir(settings.UPLOAD_IMG_SRC_DIR)
+            except OSError, e:
+                self.stderr.write(e.args)

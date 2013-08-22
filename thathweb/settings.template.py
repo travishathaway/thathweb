@@ -142,6 +142,7 @@ INSTALLED_APPS =(
     'tinymce',
     'thathweb.nacha_creator',
     'thathweb.posts',
+    'thathweb.pictures',
     'south',
     'menu',
     'tastypie',
@@ -178,3 +179,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'cleanup_on_startup': True,
     'custom_undo_redo_levels': 10,
 }
+
+# thathweb.pictures settings
+UPLOAD_IMG_SRC_DIR =  ''
+UPLOAD_IMG_DEST_DIR = ''

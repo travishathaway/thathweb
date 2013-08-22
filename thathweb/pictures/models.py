@@ -9,5 +9,5 @@ class Picture(models.Model):
     path        = models.FilePathField(max_length=255)
     thumbnail_path = models.FilePathField(max_length=255)
     date_time   = models.DateTimeField(auto_now=True)
-    picture_tag = models.ForeignKey(PictureTag)
+    picture_tag = models.ForeignKey(PictureTag, null=True, blank=True)
 
