@@ -1,1 +1,8 @@
-<h3>Hai!</h3>
+<div id="image-container" isotope-container="{{current_page}}">
+    <div class="picture pull-left" style="border: 5px solid black" ng-repeat="pic in pictures">
+        <a href="{{ STATIC_URL+pic.fields.path }}" class="fancybox" rel="gallery" title="{{ pic.fields.title }}">
+            <img src="{{ STATIC_URL+pic.fields.thumbnail_path }}" title="{{pic.fields.title}}" />
+        </a>
+    </div>
+</div>
+<button class="btn" ng-click="getPage(2)" >Next</button>

@@ -1,6 +1,6 @@
-var refundApp = angular.module('pictures', []);
+var picturesApp = angular.module('pictures', ['pictures.directives']);
 
-refundApp.config( function($routeProvider) {
+picturesApp.config( function($routeProvider) {
   $routeProvider.
       when('/', {controller: Pictures, templateUrl : '/static/templates/pictures/index.html'}).otherwise({redirectTo : '/'});
 });

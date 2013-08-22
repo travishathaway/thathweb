@@ -2,9 +2,7 @@
 
 {% block content %}
     <h2>Pictures</h2>
-    <div ng-app="pictures">
-        <div ng-view>
-        </div>
+    <div id="image-container">
     </div>
     <br style="clear:both">
 
@@ -22,11 +20,21 @@
     {{ block.super }}
     <script src="{{ STATIC_URL }}js/jquery.isotope.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.fancybox.pack.js"></script>
-    <script src="{{ STATIC_URL }}js/angular/pictures/directives.js"></script>
+    <!--script src="{{ STATIC_URL }}js/angular/pictures/directives.js"></script>
     <script src="{{ STATIC_URL }}js/angular/pictures/controllers.js"></script>
-    <script src="{{ STATIC_URL }}js/angular/pictures/app.js"></script>
+    <script src="{{ STATIC_URL }}js/angular/pictures/app.js"></script /-->
     <script>
-    $(document).ready( function() {
+        $(document).ready( function() {
+            $.ajax({
+                'url' : '/pictures/',
+                'success' : function(data){
+                    $("#image-container").append(data.html);
+                },
+                'error' : function(data){
+                    alert("Server Error");
+                }
+            });
+
         $(".fancybox").fancybox();
     });
     </script>
