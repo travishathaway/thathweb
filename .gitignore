@@ -32,7 +32,6 @@ pip-log.txt
 
 #Django Stuff
 local_settings.py
-static
 
 #Vim Stuff
 *.swp

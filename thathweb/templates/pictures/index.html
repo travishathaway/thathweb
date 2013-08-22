@@ -1,8 +1,33 @@
 {% extends "base.html" %} 
 
 {% block content %}
-<h2>Pictures</h2>
-{% for pic in pictures %}
-<img src="{{ STATIC_URL}}{{ pic.thumbnail_path }}" title="{{pic.title}}" />
-{% endfor %}
+    <h2>Pictures</h2>
+    <div id="image-container">
+    {% for pic in pictures %}
+        <div class="picture">
+            <img src="{{ STATIC_URL}}{{ pic.thumbnail_path }}" title="{{pic.title}}" />
+        </div>
+    {% endfor %}
+    </div>
+
+    <div ng-app="pictures">
+        <div ng-view>
+        
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{{ STATIC_URL }}js/jquery.isotope.min.js"></script>
+    <script src="{{ STATIC_URL }}js/angular/pictures/app.js"></script>
+    <script src="{{ STATIC_URL }}js/angular/pictures/controllers.js"></script>
+    <script>
+    $(document).ready( function() {
+        $('#image-container').isotope({
+            itemSelector : '.picture',
+            layoutMode   : 'cellsByRow'
+        });
+    });
+    </script>
 {% endblock %}
