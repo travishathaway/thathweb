@@ -23,13 +23,15 @@ class Pictures(ThathwebBaseViewNoAuth):
             pictures = paginator.page(paginator.num_pages)
 
         if request.is_ajax():
-            html = render_to_string(
+            pictures_html = render_to_string(
                 'pictures/list_partial.html', 
                 {'pictures' : pictures, 'STATIC_URL' : settings.STATIC_URL}
             )
-            #ret_json = json.dumps({'html' : html, 'page': page, 'pictures': pictures})
-            ret_json = serializers.serialize('json', pictures)
-            ret_json += json.dumps({'html' : html, 'page': page})
+            paginator_html = render_to_string(
+                'pictures/pagination.html',
+                { 'pictures' : pictures }
+            )
+            ret_json = json.dumps({'pictures_html' : pictures_html, 'paginator_html' : paginator_html, 'page': page})
             response = HttpResponse(ret_json, mimetype="application/json" )
         else:
             response = self.render_to_response( { 

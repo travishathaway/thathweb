@@ -2,15 +2,15 @@
 
 {% block content %}
     <h2>Pictures</h2>
-    <button id="next" class="btn">Next</button>
+    <div id="paginator-container">
+        {% include "pictures/pagination.html" %}
+    </div>
     <div id="image-container" >
         {% include "pictures/list_partial.html" %}
     </div>
     <br style="clear:both">
 
     <input type="hidden" id="static-url" value="{{STATIC_URL}}" />
-
-
 {% endblock %}
 
 {% block css %}
@@ -27,13 +27,15 @@
     <script src="{{ STATIC_URL }}js/angular/pictures/app.js"></script /-->
     <script>
     $(document).ready( function() {
-        $('#next').on('click', function() {
+        $('#paginator-container').on('click', 'a', function() {
+            page = $(this).data('page');
             $.ajax({
-                'url' : '/pictures/page/2/',
+                'url' : '/pictures/page/'+page+'/',
                 'success' : function(data){
-                    var $html = $(data.html);
-                    $('#image-container').isotope('insert', $html);
+                    var $pictures = $(data.pictures_html);
+                    $('#image-container').isotope('insert', $pictures);
                     $('#image-container').isotope({filter : '.page'+data.page});
+                    $('#paginator-container').html(data.paginator_html);
                 },
                 'error' : function(data){
                     alert("Server Error");
