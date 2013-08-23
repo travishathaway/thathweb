@@ -2,7 +2,9 @@
 
 {% block content %}
     <h2>Pictures</h2>
-    <div id="image-container">
+    <button id="next" class="btn">Next</button>
+    <div id="image-container" >
+        {% include "pictures/list_partial.html" %}
     </div>
     <br style="clear:both">
 
@@ -24,16 +26,24 @@
     <script src="{{ STATIC_URL }}js/angular/pictures/controllers.js"></script>
     <script src="{{ STATIC_URL }}js/angular/pictures/app.js"></script /-->
     <script>
-        $(document).ready( function() {
+    $(document).ready( function() {
+        $('#next').on('click', function() {
             $.ajax({
-                'url' : '/pictures/',
+                'url' : '/pictures/page/2/',
                 'success' : function(data){
-                    $("#image-container").append(data.html);
+                    var $html = $(data.html);
+                    $('#image-container').isotope('insert', $html);
+                    $('#image-container').isotope({filter : '.page'+data.page});
                 },
                 'error' : function(data){
                     alert("Server Error");
                 }
             });
+        });
+
+        $('#image-container').isotope({
+            layoutMode : 'masonry',
+        });
 
         $(".fancybox").fancybox();
     });
