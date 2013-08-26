@@ -1,12 +1,17 @@
 {% extends "base.html" %} 
 
 {% block content %}
-    <h2>Pictures</h2>
-    <div id="paginator-container">
-        {% include "pictures/pagination.html" %}
+    <div class="span9">
+        <h2>Pictures</h2>
+        <div id="paginator-container">
+            {% include "pictures/pagination.html" %}
+        </div>
+        <div id="image-container">
+            {% include "pictures/list_partial.html" %}
+        </div>
     </div>
-    <div id="image-container">
-        {% include "pictures/list_partial.html" %}
+    <div class="span2">
+        {% include "pictures/tags.html" %}
     </div>
     <br style="clear:both">
 

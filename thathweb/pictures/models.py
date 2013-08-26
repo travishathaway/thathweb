@@ -4,10 +4,10 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 class PictureTag(models.Model):
     title   = models.CharField(max_length=255)
-    name    = models.CharField(max_length=255, unique=True)
+    name    = models.SlugField(unique=True)
 
     def __unicode__(self):
-        return self.name
+        return self.title
 
 class Picture(models.Model):
     title       = models.CharField(max_length=255)

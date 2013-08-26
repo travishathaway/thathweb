@@ -1,7 +1,11 @@
 from django.contrib import admin
 from models import *
 
-#class PictureAdmin(admin.ModelAdmin):
-#    pass
-admin.site.register(Picture)
-admin.site.register(PictureTag)
+class PictureTagAdmin(admin.ModelAdmin):
+    prepopulated_fields = { 'name' : ('title',)}
+
+class PictureAdmin(admin.ModelAdmin):
+    exclude = ('path', 'thumbnail_path')
+
+admin.site.register(Picture, PictureAdmin)
+admin.site.register(PictureTag, PictureTagAdmin)
