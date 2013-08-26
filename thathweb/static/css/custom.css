@@ -4,6 +4,9 @@ h1, h2, h3, h4, h5, h6 {
 li a {
     font-family: 'Domine', serif;
 }
+html,body{
+    height: 100%;
+}
 body {
     background-image: url('/static/img/grid.png');
 }
@@ -14,6 +17,34 @@ a {
 
 a:hover {
     color: #A10B00;
+}
+/* Wrapper for page content to push down footer */
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    /* Negative indent footer by it's height */
+    margin: 0 auto -60px;
+}
+
+/* Set the fixed height of the footer here */
+#push,
+#footer {
+    height: 60px;
+}
+#footer {
+    color: #f5f5f5;
+    background-color: black;
+}
+
+/* Lastly, apply responsive CSS fixes as necessary */
+@media (max-width: 767px) {
+    #footer {
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
 }
 
 #nacha-controls .nacha-controls-inner{

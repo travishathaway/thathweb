@@ -12,7 +12,7 @@ class Pictures(ThathwebBaseViewNoAuth):
 
     def get(self, request, *args, **kwargs):
         pictures  = models.Picture.objects.all()
-        paginator = Paginator(pictures, 5)
+        paginator = Paginator(pictures, 20)
         page = kwargs.get('page')
 
         try:

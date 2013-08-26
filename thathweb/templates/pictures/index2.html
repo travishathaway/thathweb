@@ -5,7 +5,7 @@
     <div id="paginator-container">
         {% include "pictures/pagination.html" %}
     </div>
-    <div id="image-container" >
+    <div id="image-container">
         {% include "pictures/list_partial.html" %}
     </div>
     <br style="clear:both">
@@ -22,20 +22,20 @@
     {{ block.super }}
     <script src="{{ STATIC_URL }}js/jquery.isotope.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.fancybox.pack.js"></script>
-    <!--script src="{{ STATIC_URL }}js/angular/pictures/directives.js"></script>
-    <script src="{{ STATIC_URL }}js/angular/pictures/controllers.js"></script>
-    <script src="{{ STATIC_URL }}js/angular/pictures/app.js"></script /-->
     <script>
     $(document).ready( function() {
         $('#paginator-container').on('click', 'a', function() {
             page = $(this).data('page');
+            cur_page = $('#cur-page').val();
             $.ajax({
                 'url' : '/pictures/page/'+page+'/',
                 'success' : function(data){
                     var $pictures = $(data.pictures_html);
                     $('#image-container').isotope('insert', $pictures);
-                    $('#image-container').isotope({filter : '.page'+data.page});
                     $('#paginator-container').html(data.paginator_html);
+                    $('.page'+cur_page).remove();
+                    //$('#image-contianer').isotope('reloadItems');
+                    $('#image-container').isotope('reloadItems').isotope({sortBy : 'original-order'});
                 },
                 'error' : function(data){
                     alert("Server Error");
@@ -44,8 +44,14 @@
         });
 
         $('#image-container').isotope({
-            layoutMode : 'masonry',
+            layoutMode: 'cellsByRow',
+            cellsByRow: {
+                rowHeight: 130,
+                columnWidht: 150
+            }
         });
+
+        $('#image-container').isotope('reLayout');
 
         $(".fancybox").fancybox();
     });
