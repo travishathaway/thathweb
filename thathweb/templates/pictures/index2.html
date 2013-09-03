@@ -10,7 +10,7 @@
             {% include "pictures/list_partial.html" %}
         </div>
     </div>
-    <div class="span2">
+    <div id="tags" class="span2">
         {% include "pictures/tags.html" %}
     </div>
     <br style="clear:both">
@@ -29,24 +29,65 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.fancybox.pack.js"></script>
     <script>
     $(document).ready( function() {
+
+        var tags = [];
+
         $('#paginator-container').on('click', 'a', function() {
             page = $(this).data('page');
             cur_page = $('#cur-page').val();
             $.ajax({
+                'type': 'post',
                 'url' : '/pictures/page/'+page+'/',
+                'dataType' : 'json',
                 'success' : function(data){
-                    var $pictures = $(data.pictures_html);
-                    $('#image-container').isotope('insert', $pictures);
+                    //var $pictures = $(data.pictures_html);
+                    $('.picture').remove();
+                    $('#image-container').html(data.pictures_html);
+                    //$('#image-container').isotope('insert', $pictures);
                     $('#paginator-container').html(data.paginator_html);
-                    $('.page'+cur_page).remove();
+                    //$('.page'+cur_page).remove();
                     //$('#image-contianer').isotope('reloadItems');
-                    $('#image-container').isotope('reloadItems').isotope({sortBy : 'original-order'});
+                    //$('#image-container').isotope('reloadItems').isotope({sortBy : 'original-order'});
                 },
                 'error' : function(data){
                     alert("Server Error");
                 }
             });
         });
+
+        $('#tags').on('click', 'a', function() {
+            self = $(this);
+            page = $('#cur-page').val();
+            cur_page = $('#cur-page').val();
+            tag_index = $.inArray(self.data('tag'), tags);
+
+            if( tag_index >= 0 ) {
+                tags.splice(tag_index,1);
+            } else {
+                tags.push(self.data('tag'));
+            }
+
+            $.ajax({
+                'type': 'post',
+                'url' : '/pictures/page/'+page+'/',
+                'data': JSON.stringify(tags),
+                'contentType' : 'application/json',
+                'dataType' : 'json',
+                'success' : function(data){
+                    //var $pictures = $(data.pictures_html);
+                    $('.picture').remove();
+                    $('#image-container').html(data.pictures_html);
+                    //$('#image-container').isotope('insert', $pictures);
+                    $('#paginator-container').html(data.paginator_html);
+                    //$('#image-contianer').isotope('reloadItems');
+                    //$('#image-container').isotope('reloadItems').isotope({sortBy : 'original-order'});
+                },
+                'error' : function(data){
+                    alert("Server Error");
+                }
+            });
+        });
+
 
         $('#image-container').isotope({
             layoutMode: 'cellsByRow',
