@@ -16,12 +16,17 @@ class Pictures(ThathwebBaseViewNoAuth):
 
     def get(self, request, *args, **kwargs):
         self.pictures  = models.Picture.objects.all()
-        paginator = Paginator(self.pictures, 20)
         self.page = kwargs.get('page')
+        self.tag  = kwargs.get('tag')
+
+        if self.tag != None:
+            self.pictures = self.pictures.filter(picture_tag__name=self.tag)
 
         #set the tags
         self.get_tags()
 
+        # set up paginator
+        paginator = Paginator(self.pictures, 20)
         try:
             self.pictures = paginator.page(self.page)
         except PageNotAnInteger:
@@ -33,6 +38,7 @@ class Pictures(ThathwebBaseViewNoAuth):
             response = self.get_ajax()
         else:
             response = self.render_to_response( { 
+                'current_tag' : self.tag,
                 'pictures' : self.pictures,
                 'tags'     : self.tags
             } )
