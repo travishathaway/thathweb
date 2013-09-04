@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.core import serializers
 from django.template.loader import render_to_string
+from django.db.models import Count
 from thathweb import settings 
 from thathweb.views import ThathwebBaseViewNoAuth
 import models
@@ -91,20 +92,15 @@ class Pictures(ThathwebBaseViewNoAuth):
         return super(Pictures, self).dispatch(*args, **kwargs)
 
     def get_tags(self):
-        pt = models.PictureTag.objects.all()
-        tags = []
-
-        for tag in pt:
-            tags.append({
-                'title' : tag.title,
-                'name'  : tag.name,
-                'count' : self.pictures.filter(picture_tag__name=tag.name).count()
-            })
-
+        tags = models.Picture.objects.values(
+            'picture_tag__name','picture_tag__title'
+            ).exclude(picture_tag__name=None).order_by('-picture_tag__count').annotate(Count('picture_tag'))
         self.tags = tags
 
     def filter_pictures(self, request):
         if request.raw_post_data != '':
             req_json = json.loads(request.raw_post_data)
             if req_json != []:
-                self.pictures = self.pictures.filter(picture_tag__name__in=req_json);
+                self.pictures = self.pictures.filter(
+                        picture_tag__name__in=req_json
+                        ).distinct('id');

@@ -124,6 +124,19 @@ select {
     margin: 5px;
 }
 
+.tag {
+    font-weight: bold;
+    display: block;
+}
+
+.active-tag {
+    color: rgba(128,128,128,1);
+}
+
+.active-tag:hover {
+    color: rgba(128,128,128,1);
+}
+
 /**** Isotope Filtering ****/
 
 .isotope-item {

@@ -1,6 +1,5 @@
 import json
 from django.db import models
-from django.core.serializers.json import DjangoJSONEncoder
 
 class PictureTag(models.Model):
     title   = models.CharField(max_length=255)

@@ -27,8 +27,9 @@
     {{ block.super }}
     <script src="{{ STATIC_URL }}js/jquery.isotope.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.fancybox.pack.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.tagcloud.js"></script>
     <script>
-    $(document).ready( function() {
+    $(window).load( function() {
 
         var tags = [];
 
@@ -40,11 +41,12 @@
                 'url' : '/pictures/page/'+page+'/',
                 'dataType' : 'json',
                 'success' : function(data){
-                    //var $pictures = $(data.pictures_html);
+                    var $pictures = $(data.pictures_html);
                     $('.picture').remove();
                     $('#image-container').html(data.pictures_html);
                     //$('#image-container').isotope('insert', $pictures);
                     $('#paginator-container').html(data.paginator_html);
+                    //$('#image-container').isotope('reLayout');
                     //$('.page'+cur_page).remove();
                     //$('#image-contianer').isotope('reloadItems');
                     //$('#image-container').isotope('reloadItems').isotope({sortBy : 'original-order'});
@@ -63,8 +65,10 @@
 
             if( tag_index >= 0 ) {
                 tags.splice(tag_index,1);
+                self.removeClass('active-tag');
             } else {
                 tags.push(self.data('tag'));
+                self.addClass('active-tag');
             }
 
             $.ajax({
@@ -81,6 +85,7 @@
                     $('#paginator-container').html(data.paginator_html);
                     //$('#image-contianer').isotope('reloadItems');
                     //$('#image-container').isotope('reloadItems').isotope({sortBy : 'original-order'});
+                    //$('#image-container').isotope('reLayout');
                 },
                 'error' : function(data){
                     alert("Server Error");
@@ -97,7 +102,7 @@
             }
         });
 
-        $('#image-container').isotope('reLayout');
+        //$('#image-container').isotope('reLayout');
 
         $(".fancybox").fancybox();
     });

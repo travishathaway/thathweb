@@ -1,6 +1,7 @@
 <h3>Tags</h3>
 {% for tag in tags %}
-    <div class="tag">
-        <a href="#" data-tag="{{tag.name}}">{{tag.title}} ({{tag.count}})</a>
-    </div>
+<a href="#" class="tag" rel="{{tag.picture_tag__count}}" 
+    data-tag="{{tag.picture_tag__name}}" data-count="{{tag.picture_tag__count}}" 
+    data-title="{{tag.title}}">{{tag.picture_tag__title}}({{tag.picture_tag__count}})
+</a>
 {% endfor %}
