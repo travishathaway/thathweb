@@ -1,18 +1,23 @@
 import os, shutil, re, Image
+from pprint import pprint
 from datetime import datetime
 
 from django.core.management.base import BaseCommand, CommandError
+from django.template.defaultfilters import slugify
+from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
-from thathweb.pictures.models import Picture
+from thathweb.pictures.models import Picture, PictureTag
 
 class Command(BaseCommand):
     help = 'Imports pictures into the database and also creates thumbnails'
     thumb_size = (128,128)
     nowstr = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
+    tags = []
 
     def handle(self, *args, **options):
         self.initialize()
+        self.set_tags(args)
 
         imgs = [ settings.UPLOAD_IMG_SRC_DIR+img for img in os.listdir(settings.UPLOAD_IMG_SRC_DIR) ]
 
@@ -43,6 +48,12 @@ class Command(BaseCommand):
                     p.title = os.path.basename(img)
                     p.path  = 'uploads/'+os.path.basename(img)
                     p.thumbnail_path = 'uploads/thumbnails/thmb_'+os.path.basename(img)
+                    
+                    p.save()
+
+                    for tag in self.tags:
+                        p.picture_tag.add(tag)
+
                     p.save()
 
                 else:
@@ -61,3 +72,19 @@ class Command(BaseCommand):
                 os.mkdir(settings.UPLOAD_IMG_SRC_DIR)
             except OSError, e:
                 self.stderr.write(e.args)
+
+    def set_tags(self, args):
+        for tag in args:
+            slug = slugify(tag)
+
+            try:
+                cur_tag = PictureTag.objects.get(name=slug)
+                self.tags.append(cur_tag)
+
+            except ObjectDoesNotExist:
+                new_tag = PictureTag()
+                new_tag.name = slug
+                new_tag.title = tag
+                new_tag.save()
+                self.tags.append(new_tag)
+            

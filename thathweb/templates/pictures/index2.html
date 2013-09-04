@@ -104,7 +104,14 @@
 
         //$('#image-container').isotope('reLayout');
 
-        $(".fancybox").fancybox();
+        $(".fancybox").fancybox({
+            helpers : {
+                title : {
+                    type : 'inside'
+
+                }
+            }
+        });
     });
     </script>
 {% endblock %}

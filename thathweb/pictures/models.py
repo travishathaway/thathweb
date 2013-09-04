@@ -13,6 +13,9 @@ class Picture(models.Model):
     path        = models.FilePathField(max_length=255)
     thumbnail_path = models.FilePathField(max_length=255)
     date_time   = models.DateTimeField(auto_now=True)
+    annotation  = models.TextField(null=True)
+
+    #Relationships
     picture_tag = models.ManyToManyField(PictureTag, null=True, blank=True)
 
     def __unicode__(self):
