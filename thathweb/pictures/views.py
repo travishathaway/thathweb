@@ -13,7 +13,8 @@ from thathweb.views import ThathwebBaseViewNoAuth
 import models
 
 class Pictures(ThathwebBaseViewNoAuth):
-    template_name = "pictures/index2.html"
+    template_name = "pictures/index.html"
+    picture_per_page = 30
 
     def get(self, request, *args, **kwargs):
         self.pictures  = models.Picture.objects.all()
@@ -27,7 +28,7 @@ class Pictures(ThathwebBaseViewNoAuth):
         self.get_tags()
 
         # set up paginator
-        paginator = Paginator(self.pictures, 20)
+        paginator = Paginator(self.pictures, self.picture_per_page)
         try:
             self.pictures = paginator.page(self.page)
         except PageNotAnInteger:
@@ -79,7 +80,7 @@ class Pictures(ThathwebBaseViewNoAuth):
     def post(self, request, *args, **kwargs):
         self.pictures  = models.Picture.objects.all()
         self.filter_pictures(request)
-        paginator = Paginator(self.pictures, 20)
+        paginator = Paginator(self.pictures, self.picture_per_page)
         self.page = kwargs.get('page')
 
         #set the tags

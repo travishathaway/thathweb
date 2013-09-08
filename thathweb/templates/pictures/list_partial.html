@@ -1,8 +1,10 @@
 {% for pic in pictures.object_list %}
-<div class="picture pull-left page{{pictures.number}}" style="border: 5px solid black" >
-    <a href="{{ STATIC_URL }}{{pic.path }}" class="fancybox" rel="gallery" title="{{ pic.annotation }}">
-        <img src="{{ STATIC_URL }}{{pic.thumbnail_path }}" title="{{pic.title}}" />
+<div class="picture pull-left page{{pictures.number}}" >
+    <div class="image-cropper">
+        <a href="{{ STATIC_URL }}{{pic.path }}" class="fancybox" rel="gallery" title="{{ pic.annotation }}">
+            <img src="{{ STATIC_URL }}{{pic.thumbnail_path }}" title="{{pic.title}}" />
         </a>
+    </div>
 </div>
 {% endfor %}
 

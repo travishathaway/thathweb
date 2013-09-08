@@ -129,6 +129,16 @@ select {
     display: block;
 }
 
+.image-cropper {
+    width: 120px;
+    height: 80px;
+    overflow: hidden;
+}
+
+.picture {
+    margin: 3px;
+}
+
 .active-tag {
     color: rgba(128,128,128,1);
 }

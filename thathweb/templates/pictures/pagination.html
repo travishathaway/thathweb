@@ -2,9 +2,9 @@
     <ul>
         <li>
     {% if pictures.has_previous %}
-        <a href="#" data-page="{{ pictures.previous_page_number }}" class="prev">&lsaquo;&lsaquo; previous</a>
+        <a href="#" data-page="{{ pictures.previous_page_number }}" class="prev">&lsaquo;&lsaquo;</a>
     {% else %}
-        <span class="disabled prev">&lsaquo;&lsaquo; previous</span>
+        <span class="disabled prev">&lsaquo;&lsaquo;</span>
     {% endif %}
         </li>
     {% for page in pictures.pages %}
@@ -22,9 +22,9 @@
     {% endfor %}
         <li>
     {% if pictures.has_next %}
-        <a href="#" data-page="{{pictures.next_page_number}}" class="next">next &rsaquo;&rsaquo;</a>
+        <a href="#" data-page="{{pictures.next_page_number}}" class="next">&rsaquo;&rsaquo;</a>
     {% else %}
-        <span class="disabled next">next &rsaquo;&rsaquo;</span>
+        <span class="disabled next">&rsaquo;&rsaquo;</span>
     {% endif %}
         </li>
     </ul>
