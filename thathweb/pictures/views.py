@@ -1,12 +1,13 @@
 import json
 from pprint import pprint
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.core import serializers
 from django.template.loader import render_to_string
 from django.db.models import Count
+
 from thathweb import settings 
 from thathweb.views import ThathwebBaseViewNoAuth
 import models
@@ -16,7 +17,7 @@ class Pictures(ThathwebBaseViewNoAuth):
 
     def get(self, request, *args, **kwargs):
         self.pictures  = models.Picture.objects.all()
-        self.page = kwargs.get('page')
+        self.page = kwargs.get('page',1)
         self.tag  = kwargs.get('tag')
 
         if self.tag != None:

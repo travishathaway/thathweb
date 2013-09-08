@@ -139,6 +139,7 @@ INSTALLED_APPS =(
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'pure_pagination',
     'tinymce',
     'thathweb.nacha_creator',
     'thathweb.posts',
@@ -183,3 +184,9 @@ TINYMCE_DEFAULT_CONFIG = {
 # thathweb.pictures settings
 UPLOAD_IMG_SRC_DIR =  ''
 UPLOAD_IMG_DEST_DIR = ''
+
+# Pure Pagination settings
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 5,
+    'MARGIN_PAGES_DISPLAYED': 1,
+}

@@ -42,14 +42,14 @@
                 'dataType' : 'json',
                 'success' : function(data){
                     var $pictures = $(data.pictures_html);
-                    $('.picture').remove();
-                    $('#image-container').html(data.pictures_html);
-                    //$('#image-container').isotope('insert', $pictures);
+                    //$('.picture').remove();
+                    //$('#image-container').html(data.pictures_html);
+                    $('#image-container').isotope('insert', $pictures);
                     $('#paginator-container').html(data.paginator_html);
-                    //$('#image-container').isotope('reLayout');
-                    //$('.page'+cur_page).remove();
+                    $('#image-container').isotope('reLayout');
+                    $('.page'+cur_page).remove();
                     //$('#image-contianer').isotope('reloadItems');
-                    //$('#image-container').isotope('reloadItems').isotope({sortBy : 'original-order'});
+                    $('#image-container').isotope('reloadItems').isotope({sortBy : 'original-order'});
                 },
                 'error' : function(data){
                     alert("Server Error");
@@ -78,13 +78,13 @@
                 'contentType' : 'application/json',
                 'dataType' : 'json',
                 'success' : function(data){
-                    //var $pictures = $(data.pictures_html);
-                    $('.picture').remove();
-                    $('#image-container').html(data.pictures_html);
-                    //$('#image-container').isotope('insert', $pictures);
+                    var $pictures = $(data.pictures_html);
+                    //$('.picture').remove();
+                    //$('#image-container').html(data.pictures_html);
+                    $('#image-container').isotope('insert', $pictures);
                     $('#paginator-container').html(data.paginator_html);
                     //$('#image-contianer').isotope('reloadItems');
-                    //$('#image-container').isotope('reloadItems').isotope({sortBy : 'original-order'});
+                    $('#image-container').isotope('reloadItems').isotope({sortBy : 'original-order'});
                     //$('#image-container').isotope('reLayout');
                 },
                 'error' : function(data){

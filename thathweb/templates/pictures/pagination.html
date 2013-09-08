@@ -1,12 +1,32 @@
-<div class="pagination-controls">
-    <input id="cur-page" type="hidden" value="{{pictures.number}}" >
+<div class="pagination-controls pagination">
+    <ul>
+        <li>
     {% if pictures.has_previous %}
-    <a href="#" data-page="{{pictures.previous_page_number}}">Previous</a>
+        <a href="#" data-page="{{ pictures.previous_page_number }}" class="prev">&lsaquo;&lsaquo; previous</a>
+    {% else %}
+        <span class="disabled prev">&lsaquo;&lsaquo; previous</span>
     {% endif %}
-
-    <span>Page {{ pictures.number }} of {{ pictures.paginator.num_pages}}</span>
-
+        </li>
+    {% for page in pictures.pages %}
+        <li>
+        {% if page %}
+            {% ifequal page pictures.number %}
+                <span class="current page">{{ page }}</span>
+            {% else %}
+                <a href="#" data-page="{{ page }}" class="page">{{ page }}</a>
+            {% endifequal %}
+        {% else %}
+        <span>...</span>
+        {% endif %}
+        </li>
+    {% endfor %}
+        <li>
     {% if pictures.has_next %}
-        <a href="#" data-page="{{pictures.next_page_number}}">Next</a>
+        <a href="#" data-page="{{pictures.next_page_number}}" class="next">next &rsaquo;&rsaquo;</a>
+    {% else %}
+        <span class="disabled next">next &rsaquo;&rsaquo;</span>
     {% endif %}
+        </li>
+    </ul>
+    <input id="cur-page" type="hidden" value="{{pictures.number}}" >
 </div>
