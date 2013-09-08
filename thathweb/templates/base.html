@@ -54,7 +54,7 @@
 </div>
 <div id="footer">
     <div class="container">
-        <p>&copy; {{ SITE_NAME }} 2012</p>
+        <p>&copy; {{ SITE_NAME }} <span id="site-year"></span></p>
     </div>
 </div>
 
@@ -63,6 +63,12 @@
 <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
 <script src="{{ STATIC_URL }}js/bootstrap.js"></script>
 <script src="{{ STATIC_URL }}js/angular.min.js"></script>
+<script>
+    $(document).ready( function() { 
+        var fullYear = new Date().getFullYear();
+        $('#site-year').text(fullYear);
+    });
+</script>
 {% endblock %}
 
 </body>
