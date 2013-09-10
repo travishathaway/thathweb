@@ -11,11 +11,20 @@ from django.conf import settings
 from thathweb.pictures.models import Picture, PictureTag
 
 class Command(BaseCommand):
+    """
+    This command will bulk import pictures.  It looks for 
+    jpe(g), and png files.  When run without any args or options,
+    it just imports every picture file in the current directory.
+
+    When applying tags to picture imports use a quoted string delimited
+    by comas. Here is  an example:
+        python admin.py -t "Here is a tag, and here is another one"
+    """
+
     help = 'Imports pictures into the database and also creates thumbnails'
     thumb_size = (128,128)
-    nowstr = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
     tags = []
-    tag_args = []
+    tag_args = ''
     files = []
     webroot_path = 'uploads/'
 
@@ -25,7 +34,7 @@ class Command(BaseCommand):
             type='string',
             nargs=1,
             dest='tags',
-            default=False,
+            default='',
             help='Tags to apply to pictures'),
         make_option('-r', '--recurse',
             action='store_true',
@@ -42,6 +51,9 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        # These function make sure everything is ready in order to start
+        # creating picture/tag records in the database and copy the files
+        # to the appropriate location
         self.initialize()
         self.set_options(options)
         self.set_tags()
@@ -102,19 +114,22 @@ class Command(BaseCommand):
                 self.stderr.write(e.args)
 
     def set_tags(self):
-        for tag in self.tag_args:
-            slug = slugify(tag)
+        if self.tag_args != '':
+            tags = self.tag_args.split(',')
+            for tag in tags:
+                tag = tag.strip()
+                slug = slugify(tag)
 
-            try:
-                cur_tag = PictureTag.objects.get(name=slug)
-                self.tags.append(cur_tag)
+                try:
+                    cur_tag = PictureTag.objects.get(name=slug)
+                    self.tags.append(cur_tag)
 
-            except ObjectDoesNotExist:
-                new_tag = PictureTag()
-                new_tag.name = slug
-                new_tag.title = tag
-                new_tag.save()
-                self.tags.append(new_tag)
+                except ObjectDoesNotExist:
+                    new_tag = PictureTag()
+                    new_tag.name = slug
+                    new_tag.title = tag
+                    new_tag.save()
+                    self.tags.append(new_tag)
 
     def set_options(self, options):
         if os.path.exists(options.get('folder')):
@@ -123,11 +138,7 @@ class Command(BaseCommand):
             raise Exception(options['folder']+" does not exist.")
 
         self.recurse = options.get('recurse', False)
-
-        # This is here until I figure out a way to get make_option 
-        # to allow any number of nargs.
-        if options.get('tags', False) != False:
-            self.tag_args = [options.get('tags')]
+        self.tag_args = options.get('tags', '')
 
     def set_files(self):
         if self.recurse:
