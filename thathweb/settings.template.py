@@ -182,7 +182,6 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 # thathweb.pictures settings
-UPLOAD_IMG_SRC_DIR =  ''
 UPLOAD_IMG_DEST_DIR = ''
 
 # Pure Pagination settings

@@ -1,4 +1,5 @@
 import os, shutil, re, Image
+from optparse import make_option
 from pprint import pprint
 from datetime import datetime
 
@@ -14,14 +15,39 @@ class Command(BaseCommand):
     thumb_size = (128,128)
     nowstr = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
     tags = []
+    tag_args = []
+    files = []
+    webroot_path = 'uploads/'
+
+    option_list = BaseCommand.option_list + (
+        make_option('-t', '--tags',
+            action='store',
+            type='string',
+            nargs=1,
+            dest='tags',
+            default=False,
+            help='Tags to apply to pictures'),
+        make_option('-r', '--recurse',
+            action='store_true',
+            dest='recurse',
+            default=False,
+            help='Recurse in to directories when looking for pictures'),
+        make_option('-f', '--folder',
+            action='store',
+            type='string',
+            nargs=1,
+            dest='folder',
+            default='./',
+            help='Folder to scan for pictures. Defaults to current directory'),
+        )
 
     def handle(self, *args, **options):
         self.initialize()
-        self.set_tags(args)
+        self.set_options(options)
+        self.set_tags()
+        self.set_files()
 
-        imgs = [ settings.UPLOAD_IMG_SRC_DIR+img for img in os.listdir(settings.UPLOAD_IMG_SRC_DIR) ]
-
-        for img in imgs:
+        for img in self.files:
             # Find our image files
             match = re.search('(png|jpe?g)$',img)
 
@@ -46,11 +72,12 @@ class Command(BaseCommand):
                     # make a database record
                     p = Picture()
                     p.title = os.path.basename(img)
-                    p.path  = 'uploads/'+os.path.basename(img)
-                    p.thumbnail_path = 'uploads/thumbnails/thmb_'+os.path.basename(img)
+                    p.path  = self.webroot_path+os.path.basename(img)
+                    p.thumbnail_path = self.webroot_path+'thumbnails/thmb_'+os.path.basename(img)
                     
                     p.save()
 
+                    # add tags 
                     for tag in self.tags:
                         p.picture_tag.add(tag)
 
@@ -66,15 +93,16 @@ class Command(BaseCommand):
                 os.mkdir(settings.UPLOAD_IMG_DEST_DIR)
             except OSError, e:
                 self.stderr.write(e.args)
-        if not os.path.exists(settings.UPLOAD_IMG_SRC_DIR):
+
+        if not os.path.exists(settings.UPLOAD_IMG_DEST_DIR+'/thumbnails'):
             # try to make it
             try:
-                os.mkdir(settings.UPLOAD_IMG_SRC_DIR)
+                os.mkdir(settings.UPLOAD_IMG_DEST_DIR+'/thumbnails')
             except OSError, e:
                 self.stderr.write(e.args)
 
-    def set_tags(self, args):
-        for tag in args:
+    def set_tags(self):
+        for tag in self.tag_args:
             slug = slugify(tag)
 
             try:
@@ -87,4 +115,32 @@ class Command(BaseCommand):
                 new_tag.title = tag
                 new_tag.save()
                 self.tags.append(new_tag)
-            
+
+    def set_options(self, options):
+        if os.path.exists(options.get('folder')):
+            self.folder  = options['folder']
+        else:
+            raise Exception(options['folder']+" does not exist.")
+
+        self.recurse = options.get('recurse', False)
+
+        # This is here until I figure out a way to get make_option 
+        # to allow any number of nargs.
+        if options.get('tags', False) != False:
+            self.tag_args = [options.get('tags')]
+
+    def set_files(self):
+        if self.recurse:
+            # returns all files recursively
+            for dir_level in os.walk(self.folder):
+                directory = dir_level[2]
+                dir_name  = dir_level[0]
+
+                for file in directory:
+                    if dir_name[-1] == '/':
+                        self.files.append(dir_name+file)
+                    else:
+                        self.files.append(dir_name+'/'+file)
+        else:
+            # returns all files in folder non-recursive
+            self.files = [ file for file in os.listdir(self.folder) if os.path.isfile(file)]
