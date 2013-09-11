@@ -129,6 +129,14 @@ select {
     display: block;
 }
 
+.tag-header {
+    display: inline;
+}
+
+.clear-tags {
+    margin-top: 5px;
+}
+
 .image-cropper {
     width: 120px;
     height: 80px;

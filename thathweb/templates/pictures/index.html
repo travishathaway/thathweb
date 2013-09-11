@@ -62,14 +62,19 @@
             self = $(this);
             page = $('#cur-page').val();
             cur_page = $('#cur-page').val();
-            tag_index = $.inArray(self.data('tag'), tags);
 
-            if( tag_index >= 0 || self.hasClass('active-tag') ) {
-                tags.splice(tag_index,1);
-                self.removeClass('active-tag');
-            } else {
-                tags.push(self.data('tag'));
-                self.addClass('active-tag');
+            if( self.hasClass('clear-tags') ){
+                tags = [];
+            } else { 
+                tag_index = $.inArray(self.data('tag'), tags);
+
+                if( tag_index >= 0 || self.hasClass('active-tag') ) {
+                    tags.splice(tag_index,1);
+                    self.removeClass('active-tag');
+                } else {
+                    tags.push(self.data('tag'));
+                    self.addClass('active-tag');
+                }
             }
 
             $.ajax({
