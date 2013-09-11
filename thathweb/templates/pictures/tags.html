@@ -1,8 +1,28 @@
-<h3>Tags</h3>
-{% for tag in tags %}
-<a href="#" class="tag {%if current_tag == tag.picture_tag__name %}active-tag{%endif%}" 
-    rel="{{tag.picture_tag__count}}"  data-tag="{{tag.picture_tag__name}}" 
-    data-count="{{tag.picture_tag__count}}" 
-    data-title="{{tag.title}}">{{tag.picture_tag__title}}({{tag.picture_tag__count}})
-</a>
-{% endfor %}
+<div class="active-tags">
+    <h4>Current Search</h4>
+    {% if active_tag_count > 0 %}
+        {% for key, tag in tags.items %}
+        {% if tag.active == True %}
+        <a href="#" class="tag {%if tag.active %}active-tag{%endif%}" 
+            rel="{{tag.count}}" data-tag="{{tag.name}}" title="Click to remove"
+            data-count="{{tag.count}}"
+            data-title="{{tag.title}}">{{tag.title}}({{tag.count}})
+        </a>
+        {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>No tags selected. Click tags below to filter results.</p>
+    {% endif %}
+</div>
+<div class="search-tags">
+    <h4>Search Tags</h4>
+    {% for key, tag in tags.items %}
+    {% if tag.active != True %}
+    <a href="#" class="tag {%if tag.active %}active-tag{%endif%}" 
+        rel="{{tag.count}}" data-tag="{{tag.name}}" 
+        data-count="{{tag.count}}"
+        data-title="{{tag.title}}">{{tag.title}}({{tag.count}})
+    </a>
+    {% endif %}
+    {% endfor %}
+</div>

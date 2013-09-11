@@ -27,7 +27,6 @@
     {{ block.super }}
     <script src="{{ STATIC_URL }}js/jquery.isotope.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.fancybox.pack.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.tagcloud.js"></script>
     <script>
     $(window).load( function() {
 
@@ -39,13 +38,15 @@
             $.ajax({
                 'type': 'post',
                 'url' : '/pictures/page/'+page+'/',
+                'data': JSON.stringify(tags),
+                'contentType' : 'application/json',
                 'dataType' : 'json',
                 'success' : function(data){
-                    var $pictures = $(data.pictures_html);
                     $('.picture').remove();
                     $('#image-container').html(data.pictures_html).fadeIn();
                     //$('#image-container').isotope('insert', $pictures);
                     $('#paginator-container').html(data.paginator_html);
+                    $('#tags').html(data.tags_html);
                     //$('#image-container').isotope('reLayout');
                     //$('.page'+cur_page).remove();
                     //$('#image-contianer').isotope('reloadItems');
@@ -78,11 +79,11 @@
                 'contentType' : 'application/json',
                 'dataType' : 'json',
                 'success' : function(data){
-                    var $pictures = $(data.pictures_html);
                     $('.picture').remove();
                     $('#image-container').html(data.pictures_html);
                     //$('#image-container').isotope('insert', $pictures);
                     $('#paginator-container').html(data.paginator_html);
+                    $('#tags').html(data.tags_html);
                     //$('#image-contianer').isotope('reloadItems');
                     //$('#image-container').isotope('reloadItems').isotope({sortBy : 'original-order'});
                     //$('#image-container').isotope('reLayout');

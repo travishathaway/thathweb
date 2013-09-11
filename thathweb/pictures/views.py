@@ -16,13 +16,18 @@ class Pictures(ThathwebBaseViewNoAuth):
     template_name = "pictures/index.html"
     picture_per_page = 30
 
-    def get(self, request, *args, **kwargs):
-        self.pictures  = models.Picture.objects.all()
-        self.page = kwargs.get('page',1)
-        self.tag  = kwargs.get('tag')
+    def __init__(self,*args,**kwargs):
+        self.filter_tags = []
+        self.tags = {}
+        self.pictures = models.Picture.objects.all().filter(published=True)
+        super(ThathwebBaseViewNoAuth, self).__init__(*args,**kwargs)
 
-        if self.tag != None:
-            self.pictures = self.pictures.filter(picture_tag__name=self.tag)
+    def get(self, request, *args, **kwargs):
+        self.page = kwargs.get('page',1)
+
+        if kwargs.get('tag') != None:
+            self.filter_tags.append(kwargs.get('tag'))
+            self.pictures = self.pictures.filter(picture_tag__name=kwargs.get('tag'))
 
         #set the tags
         self.get_tags()
@@ -40,9 +45,9 @@ class Pictures(ThathwebBaseViewNoAuth):
             response = self.get_ajax()
         else:
             response = self.render_to_response( { 
-                'current_tag' : self.tag,
                 'pictures' : self.pictures,
-                'tags'     : self.tags
+                'tags'     : self.tags,
+                'active_tag_count' : self.active_tag_count,
             } )
 
         return response
@@ -61,13 +66,15 @@ class Pictures(ThathwebBaseViewNoAuth):
 
         tags_html = render_to_string(
             'pictures/tags.html',
-            {'tags' : self.tags }
+            {'tags' : self.tags,
+            'active_tag_count' : self.active_tag_count, }
         )
 
         ret_json = json.dumps({
             'pictures_html' : pictures_html,
             'paginator_html' : paginator_html,
-            'page': self.page
+            'tags_html' : tags_html,
+            'page': self.page,
         })
 
         response = HttpResponse(ret_json, mimetype="application/json" )
@@ -78,7 +85,6 @@ class Pictures(ThathwebBaseViewNoAuth):
         return
 
     def post(self, request, *args, **kwargs):
-        self.pictures  = models.Picture.objects.all()
         self.filter_pictures(request)
         paginator = Paginator(self.pictures, self.picture_per_page)
         self.page = kwargs.get('page')
@@ -100,15 +106,28 @@ class Pictures(ThathwebBaseViewNoAuth):
         return super(Pictures, self).dispatch(*args, **kwargs)
 
     def get_tags(self):
-        tags = models.Picture.objects.values(
-            'picture_tag__name','picture_tag__title'
-            ).exclude(picture_tag__name=None).order_by('-picture_tag__count').annotate(Count('picture_tag'))
-        self.tags = tags
+        tag_counts = {}
+
+        for picture in self.pictures:
+            for tag in picture.picture_tag.all():
+                if tag_counts.get(tag.name) != None:
+                    tag_counts[tag.name]['count'] += 1
+                else:
+                    tag_counts[tag.name] = {
+                        'count' : 1,
+                        'name'  : tag.name,
+                        'title' : tag.title,
+                        'active': ( tag.name in self.filter_tags),
+                    }
+
+        self.tags = tag_counts
+        self.active_tag_count = len(
+            [x for x in self.tags.itervalues() if x['active'] ]
+        )
 
     def filter_pictures(self, request):
         if request.raw_post_data != '':
-            req_json = json.loads(request.raw_post_data)
-            if req_json != []:
-                self.pictures = self.pictures.filter(
-                        picture_tag__name__in=req_json
-                        ).distinct('id');
+            self.filter_tags = json.loads(request.raw_post_data)
+            for tag in self.filter_tags:
+                self.pictures = self.pictures.filter(picture_tag__name=tag)
+            self.pictures = self.pictures.distinct('id');
