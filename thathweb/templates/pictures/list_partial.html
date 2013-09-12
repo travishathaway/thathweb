@@ -1,7 +1,7 @@
 {% for pic in pictures.object_list %}
 <div class="picture pull-left page{{pictures.number}}" >
     <div class="image-cropper">
-        <a href="{{ STATIC_URL }}{{pic.path }}" class="fancybox" rel="gallery" title="{{ pic.annotation }}">
+        <a href="{{ STATIC_URL }}{{pic.path }}" class="fancybox" rel="gallery" title="{{ pic.annotation|default_if_none:"" }}">
             <img src="{{ STATIC_URL }}{{pic.thumbnail_path }}" title="{{pic.title}}" />
         </a>
     </div>
