@@ -3,6 +3,7 @@
 {% block content %}
     <div id="tags" class="span2">
         {% include "pictures/tags.html" %}
+        <input type="hidden" id="cur-tag" value="{{ current_tag }}">
     </div>
     <div class="span9">
         <h2>Pictures</h2>
@@ -28,13 +29,20 @@
     <script src="{{ STATIC_URL }}js/jquery.isotope.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.fancybox.pack.js"></script>
     <script>
-    $(window).load( function() {
+    $(document).ready( function() {
 
         var tags = [];
 
         $('#paginator-container').on('click', 'a', function() {
-            page = $(this).data('page');
-            cur_page = $('#cur-page').val();
+            var page = $(this).data('page');
+            var cur_page = $('#cur-page').val();
+            var cur_tag = $('#cur-tag').val();
+
+            if( cur_tag != '' && ( $.inArray(cur_tag, tags) < 0 ) ) {
+                tags.push($('#cur-tag').val());
+            }
+
+            console.log(tags);
             $.ajax({
                 'type': 'post',
                 'url' : '/pictures/page/'+page+'/',

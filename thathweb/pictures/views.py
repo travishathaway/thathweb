@@ -24,10 +24,11 @@ class Pictures(ThathwebBaseViewNoAuth):
 
     def get(self, request, *args, **kwargs):
         self.page = kwargs.get('page',1)
+        self.current_tag = kwargs.get('tag','')
 
-        if kwargs.get('tag') != None:
-            self.filter_tags.append(kwargs.get('tag'))
-            self.pictures = self.pictures.filter(picture_tag__name=kwargs.get('tag'))
+        if self.current_tag != '':
+            self.filter_tags.append(self.current_tag)
+            self.pictures = self.pictures.filter(picture_tag__name=self.current_tag)
 
         #set the tags
         self.get_tags()
@@ -48,6 +49,7 @@ class Pictures(ThathwebBaseViewNoAuth):
                 'pictures' : self.pictures,
                 'tags'     : self.tags,
                 'active_tag_count' : self.active_tag_count,
+                'current_tag' : self.current_tag,
             } )
 
         return response
@@ -66,8 +68,8 @@ class Pictures(ThathwebBaseViewNoAuth):
 
         tags_html = render_to_string(
             'pictures/tags.html',
-            {'tags' : self.tags,
-            'active_tag_count' : self.active_tag_count, }
+            { 'tags' : self.tags,
+              'active_tag_count' : self.active_tag_count, }
         )
 
         ret_json = json.dumps({
