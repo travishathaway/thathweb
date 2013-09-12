@@ -6,8 +6,9 @@
         <h2>Recent Writings</h2>
         <div class="well">
             {% for post in posts %}
-                <h3><a href="{% url 'thathweb.posts.page' pk=post.id %}">{{ post.title }}</a></h3>
-                {{ post.text|safe|truncatechars:400 }}
+            <span class="pull-right"><strong>{{post.date}}</strong></span>
+                <h3 style="display: inline"><a href="{% url 'thathweb.posts.page' pk=post.id %}">{{ post.title }}</a></h3>
+                {{ post.text|safe|truncatechars:50 }}
                 <hr>
             {% endfor %}
         </div>
