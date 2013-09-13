@@ -14,7 +14,7 @@ import models
 
 class Pictures(ThathwebBaseViewNoAuth):
     template_name = "pictures/index.html"
-    picture_per_page = 30
+    picture_per_page = 35
 
     def __init__(self,*args,**kwargs):
         self.filter_tags = []

@@ -14,7 +14,7 @@ class Picture(models.Model):
     title       = models.CharField(max_length=255)
     path        = models.FilePathField(max_length=255)
     thumbnail_path = models.FilePathField(max_length=255)
-    date_time   = models.DateTimeField(auto_now=True)
+    date_time   = models.DateTimeField(auto_now_add=True)
     published   = models.BooleanField(default=True)
     annotation  = models.TextField(null=True)
 
