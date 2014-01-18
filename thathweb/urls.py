@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
-from views import HomePage, LabPage
+from views import HomePage, LabPage, DownloadsPage
 
 urlpatterns = patterns('',
     url(r'^$', HomePage.as_view()),
@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^posts/', include('thathweb.posts.urls')),
     url(r'^pictures/', include('thathweb.pictures.urls')),
     url(r'^nacha/',include('thathweb.nacha_creator.urls')),
+    url(r'^downloads/', DownloadsPage.as_view() ),
     url(r'^admin_tools/', include('admin_tools.urls')),
 )
 
@@ -22,4 +23,3 @@ if settings.DEBUG:
         (r'^media/(?P<path>.*)$', 'django.views.static.serve',
          {'document_root': settings.MEDIA_ROOT}),
     )
-

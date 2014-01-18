@@ -1,0 +1,62 @@
+{% extends "base.html" %} 
+
+{% block title %}<title>Downloads</title>{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="span7">
+        <h2>Downloads</h2>
+        <div class="pagination-controls pagination">
+            <span class="pull-right">
+                <strong>Page {{files.number}} of {{files.paginator.num_pages}}</strong>
+            </span>
+            <ul>
+                <li>
+            {% if files.has_previous %}
+                <a href="?page={{ files.previous_page_number }}" data-page="{{ files.previous_page_number }}" class="prev">&lsaquo;&lsaquo;</a>
+            {% else %}
+                <span class="disabled prev">&lsaquo;&lsaquo;</span>
+            {% endif %}
+                </li>
+            {% for page in files.pages %}
+                <li>
+                {% if page %}
+                    {% ifequal page files.number %}
+                        <span class="current page">{{ page }}</span>
+                    {% else %}
+                        <a href="?page={{ page }}" data-page="{{ page }}" class="page">{{ page }}</a>
+                    {% endifequal %}
+                {% else %}
+                <span>...</span>
+                {% endif %}
+                </li>
+            {% endfor %}
+                <li>
+            {% if files.has_next %}
+                <a href="?page={{files.next_page_number}}" data-page="{{files.next_page_number}}" class="next">&rsaquo;&rsaquo;</a>
+            {% else %}
+                <span class="disabled next">&rsaquo;&rsaquo;</span>
+            {% endif %}
+                </li>
+            </ul>
+            <input id="cur-page" type="hidden" value="{{files.number}}" >
+        </div>
+        <div class="well">
+            <table class="table">
+                <thead>
+                    <th>File Name</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    {% for file in files.object_list %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td><a title="{{ file.name }}" href="{{ file.link }}" class="pull-right"><strong>Download</strong></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

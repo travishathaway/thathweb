@@ -3,7 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.urlresolvers import reverse
 
+from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
+import os
+
 from posts.models import Post, SoundCloudSongs
+from settings import STATIC_ROOT, STATIC_URL
 
 def get_menu():
 
@@ -23,6 +27,12 @@ def get_menu():
         'pictures' : {
             'url' : '/pictures/',
             'title' : 'Pictures',
+            'active' : False,
+            'display' : True,
+        },
+        'downloads' : {
+            'url' : '/downloads/',
+            'title' : 'Downloads',
             'active' : False,
             'display' : True,
         },
@@ -99,3 +109,40 @@ class LabPage(ThathwebBaseViewNoAuth):
 
     def get(self, request, *args, **kwargs):
         return self.render_to_response({});
+
+class DownloadsPage(ThathwebBaseViewNoAuth):
+    """
+    Page that shows all the current downloads
+    """
+
+    template_name = "downloads.html"
+    download_file_exts = ['.mp3',]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            download_files = []
+            files = os.listdir(STATIC_ROOT+'kmhd/')
+            
+            for file in files:
+                if file[-4:] in self.download_file_exts:
+                    download_files.append({
+                        'name' : file,
+                        'link' : STATIC_URL+'kmhd/'+file,
+                    })
+
+        except(OSError, IndexError):
+            download_files = []
+
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+
+        pager = Paginator(download_files, 20, request=request)
+        download_files = pager.page(page)
+
+        page_data = {
+            'files' : download_files
+        }
+
+        return self.render_to_response(page_data);
