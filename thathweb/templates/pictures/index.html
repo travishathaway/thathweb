@@ -1,5 +1,9 @@
 {% extends "base.html" %} 
 
+{% block title %}
+<title>Pictures {{ current_tag }}</title>
+{% endblock %}
+
 {% block content %}
     <div id="tags" class="span2">
         {% include "pictures/tags.html" %}

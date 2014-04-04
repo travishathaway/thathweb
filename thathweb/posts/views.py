@@ -7,7 +7,7 @@ class Posts(ThathwebBaseViewNoAuth):
     template_name = "posts/index.html"
 
     def get(self,request,*args,**kwargs):
-        posts = models.Post.objects.all()
+        posts = models.Post.objects.all().order_by('-date')
         return self.render_to_response({'posts' : posts, 'pk' : kwargs.get('pk') })
 
 

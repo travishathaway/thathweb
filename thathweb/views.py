@@ -116,7 +116,7 @@ class DownloadsPage(ThathwebBaseViewNoAuth):
     """
 
     template_name = "downloads.html"
-    download_file_exts = ['.mp3',]
+    download_file_exts = ['.mp3','flac']
 
     def get(self, request, *args, **kwargs):
         try:
