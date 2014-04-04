@@ -1,5 +1,4 @@
-from django.conf.urls.defaults import *
-
+from django.conf.urls import patterns, url
 from views import AddUser, AddToGroup, ManagementBase
 
 urlpatterns = patterns('',

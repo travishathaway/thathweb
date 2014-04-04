@@ -1,13 +1,14 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, include, url
 from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
-from views import HomePage, LabPage, DownloadsPage
+from views import HomePage, LabPage, DownloadsPage, IncidentReportPage
 
 urlpatterns = patterns('',
     url(r'^$', HomePage.as_view()),
     url(r'^lab/$', LabPage.as_view(), name='thathweb.lab'),
+    url(r'^pif/$', IncidentReportPage.as_view(), name='incident_report'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('thathweb.accounts.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
