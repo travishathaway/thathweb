@@ -1,0 +1,55 @@
+{% extends "base.html" %} 
+
+{% block title %}<title>Incident Reports</title>{% endblock %}
+
+{% block css %}
+{{block.super}}
+ <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+{% endblock %}
+
+{% block content %}
+<h3>Incident Reports</h3>
+<p>Last 30 Incidents in the Portland area</p>
+<div id="map" style="height: 500px" class="map"></div>
+{% endblock %}
+
+{% block js %}
+{{block.super}}
+<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+<script src="http://www.mapquestapi.com/sdk/leaflet/v1.0/mq-map.js?key=Fmjtd%7Cluur2q6r29%2C20%3Do5-9a25qw"></script>
+<script>
+$(document).ready(function(){
+    var map;
+    var ajaxRequest;
+    var plotlist;
+    var plotlayers=[];
+
+    function initmap() {
+        // set up the map
+        map = new L.Map('map');
+
+        // create the tile layer with correct attribution
+        var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+        var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 18, attribution: osmAttrib});		
+
+        // start the map in South-East England
+        map.setView(new L.LatLng(45.522635, -122.642738), 12);
+        map.addLayer(osm);
+
+        {% for ir in incident_reports %}
+        L.marker([{{ir.lat}}, {{ir.long}}]).addTo(map).bindPopup(
+            '<p><i>{{ir.date_time}}</i></p><p>{{ir.description}}</p>');
+        {% endfor %}
+    }
+
+    initmap();
+
+    //var map = L.map('map', {
+    //        layers: MQ.mapLayer(),
+    //        center: [ 45.731701, -122.993411 ],
+    //        zoom: 12
+    //});
+});
+</script>
+{% endblock %}
