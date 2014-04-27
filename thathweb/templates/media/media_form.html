@@ -1,0 +1,59 @@
+<button id="add-exisiting-media" class="btn btn-primary">
+    <span class="glyphicon glyphicon-plus"></span>
+    Browse Media
+</button>
+<button id="add-new-media" class="btn btn-primary">
+    <span class="glyphicon glyphicon-plus"></span>
+    Add New Media
+</button>
+<div id="media-files">
+    <div id="current-files">
+        {% for file in media_files %}
+        <div class="col-md-3 media-file" data-pk="{{file.pk}}">
+            <p>{{file.title|truncatechars:15}}</p>
+            <div style="height: 50px; overflow: hidden">
+                {% if file.thumbnail == '' %}
+                <img src="{{ STATIC_URL }}img/default_thumbnail.png" title="Default">
+                {% else %}
+                <img src="{{ file.thumbnail.url }}" title="Default">
+                {% endif %}
+            </div>
+            <a href="#" class="remove-file">Remove</a>
+            <input type="hidden" name="files[]" value="{{file.pk}}">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div id="add-media" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add Media File</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div id="existing-media" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Search Existing Media</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="existing-file-search">Search:</label>
+                        <input id="search-text" type="text" class="form-control">
+                    </div>
+                    <div class="col-md-offset-4 col-md-2">
+                        <button id="modal-add-existing" type="button" class="btn btn-primary">Add Files</button>
+                    </div>
+                </div>
+            </div>
+            <div id="existing-media-container" class="modal-body">
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

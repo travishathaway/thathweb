@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+
+<h2>{{ media_file.title }}</h2>
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="{% url 'media.views.media_view' media_file.pk %}">
+            View
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'media.views.media_edit' media_file.pk %}">
+            Edit
+        </a>
+    </li>
+</ul>
+<div class="control-group">
+    <label class="control-label"><strong>Caption:</strong></label>
+    <p>{{ media_file.caption }}</p>
+    {% if media_file.file_type in media_file.image_types %}
+    <img src="{{MEDIA_URL}}{{media_file.media_file}}" 
+        alt="{{media_file.title}}" style="width: 600px">
+    {% else %}
+    <a href="{{MEDIA_URL}}{{media_file.media_file}}"
+        title="{{media_file.title}}">
+        {{media_file.title}}
+    </a>
+    {% endif %}
+</div>
+{% endblock %}

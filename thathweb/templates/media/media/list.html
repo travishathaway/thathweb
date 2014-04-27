@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link href="{{STATIC_URL}}css/jquery.fileupload.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<h3>Media File List</h3>
+<div class="col-md-2">
+    <form class="oepager">
+        <div>
+            <input id="search-text" type="text" name="search_text" class="form-control"
+            placeholder="Search...">
+        </div>
+        <hr>
+        <div>
+            <button id="add-media" class="btn btn-primary" type="button">
+                <b>Add Media <span class="glyphicon glyphicon-plus"></span></b>
+            </button>
+        </div>
+        <hr>
+        <div>
+            <div class="loading hide">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Loading...</b>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="col-md-10">
+    <div id="media-files">
+        {% include 'media/media/list_partial.html' %}
+    </div>
+</div>
+
+<div class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add Media File</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% endblock %}
+
+{% block js %}
+{{block.super}}
+
+{# special scripts for our ajax fileuploader #}
+<script src="{{STATIC_URL}}js/jquery.ui.widget.js"></script>
+<script src="{{STATIC_URL}}js/jquery.iframe-transport.js"></script>
+<script src="{{STATIC_URL}}js/jquery.fileupload.js"></script>
+<script src="{{STATIC_URL}}js/jquery.ba-bbq.js"></script>
+<script src="{{STATIC_URL}}js/jquery.oepager.js"></script>
+
+{# page specific snippet #}
+<script>
+$(document).ready(function() {
+
+    $('#media-files').oepager({
+        url : "{% url 'media.views.media_list' %}"
+    });
+
+    // Add media button
+    $('#add-media').on('click', function(){
+        $('.modal').modal('show');
+        $('.modal-body').load("{% url 'media.views.media_add_ajax_partial' %}");
+        $('.modal').on('hide.bs.modal', function(){
+            $('#media-files').trigger('oepage.updateResults');
+        });
+    });
+
+    $('body').on('finishedUpload', '#media-files', function(){
+        $('.modal').modal('hide');
+    });
+});
+</script>
+{% endblock %}
+

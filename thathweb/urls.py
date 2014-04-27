@@ -3,13 +3,18 @@ from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
-from views import HomePage, LabPage, DownloadsPage, IncidentReportPage
+from views import (
+    HomePage, LabPage, DownloadsPage, IncidentReportPage,
+    incident_geojson
+)
 
 urlpatterns = patterns('',
     url(r'^$', HomePage.as_view()),
     url(r'^lab/$', LabPage.as_view(), name='thathweb.lab'),
     url(r'^pif/$', IncidentReportPage.as_view(), name='incident_report'),
+    url(r'^pif/json/$', incident_geojson),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^mediamanager/', include('thathweb.media.urls')),
     url(r'^accounts/', include('thathweb.accounts.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^posts/', include('thathweb.posts.urls')),

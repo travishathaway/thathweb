@@ -1,0 +1,190 @@
+<script src="{{STATIC_URL}}js/jquery.ui.widget.js"></script>
+<script src="{{STATIC_URL}}js/jquery.iframe-transport.js"></script>
+<script src="{{STATIC_URL}}js/jquery.fileupload.js"></script>
+<script>
+$(document).ready(function() {
+    /** Make sure the inputs do not sumbit **/
+    $('.modal input').on('keydown', function(e){
+        if( e.keyCode == 13 ) {
+            e.preventDefault();
+        }
+    });
+
+    /* Variable Definitions */
+
+    // search text for the existing media modal search bar
+    var search_text = '';
+
+    // unix time stamp of the last keyup in the existing
+    // media modal search bar
+    var last_keydown = 0;
+
+    // Holds new media items to be added from the existing
+    // media modal
+    var new_media = [];
+
+    /* Function Definitions */
+
+    // renders the html we need for individual media items on the page
+    renderTemplate = function(data) {
+        html = '<div class="col-md-3 media-file" data-pk="'+data.pk+'">'+
+                '<p>'+data.title+'</p>'+
+                '<div style="height: 50px; overflow: hidden" >'+
+                    '<img src="'+data.thumbnail_url+'" title="'+data.title+'">'+
+                '</div>'+
+                '<a href="#" class="remove-file">Remove</a>'+
+                '<input type="hidden" name="files[]" value='+data.pk+'>'+
+            '</div>';
+        return html;
+    };
+
+    /* Event Listeners */
+
+    // Add new media button click event
+    $('#add-new-media').on('click', function(e) {
+        e.preventDefault();
+        $('#add-media .modal-title').text('Add Media File');
+        $('#add-media .modal-body').load("{% url 'media.views.media_add_ajax_partial' %}");
+        $('#add-media').modal('show');
+    });
+
+    // Destroy elements when modal is hidden
+    $('#add-media').on('hidden.bs.modal', function(e){
+        $('#add-media .modal-body div').remove();
+    });
+   
+    // Event listener for the 'finishedUpload'.  This is
+    // thrown from the 'media_add_ajax_partial.html' template.
+    $('#media-files').on('finishedUpload', function(e, data) {
+        $.each(data.result.files, function(index,value){ 
+            $('#current-files').append(renderTemplate(value));
+        });
+        $('#add-media').modal('hide');
+    });
+
+    // Add existing button media event
+    $('#add-exisiting-media').on('click', function(e) {
+        e.preventDefault();
+        media_file_ids = []
+
+        $('#current-files .media-file').each(function(index, value){ 
+            media_file_ids.push($(value).data('pk'));
+        });
+
+        $.get("{% url 'media.views.media_addexisting_ajax_partial' %}",
+            $.param({files : media_file_ids}, true), function(data) {
+                $('#existing-media .modal-body').html(data);
+        });
+
+        $('#existing-media').modal('show');
+    });
+
+    // Event listener for the 'addFromExisting'.  This is
+    $('#media-files').on('addFromExisting', function(e, data) {
+        $.each(data, function(index,value){ 
+            $('#current-files').append(renderTemplate(value));
+        });
+    });
+
+    // Event listener for the 'removeFromExisting'.  This is 
+    // thrown from the 'media_addexisting_ajax_partial.html' 
+    // template 
+    $('#media-files').on('removeFromExisting', function(e, pk) {
+        if (pk === undefined){
+            pk = 0;
+        }
+
+        $('#current-files div[data-pk="'+pk+'"]').remove();
+    });
+
+    $('#media-files').on('click', '.remove-file', function(e){
+        e.preventDefault();
+        $(this).parent().remove();
+    });
+
+    // Add or remove items from new_media list
+    $('#existing-media').on('click', '.media-file', function(e){
+        if($(this).data('selected') == 1){
+            // Remove the file
+            $(this).css({'background-color' : '#FFF'});
+            $(this).data('selected', 0);
+
+            var pk = $(this).data('pk');
+            var rm_index = -1;
+
+            // Remove the item from new_media
+            $.each(new_media, function(index, value){
+                if( pk == value.pk ){
+                    rm_index = index;
+                }
+            });
+
+            if ( rm_index > -1 ) {
+                new_media.splice(rm_index, 1);
+            }
+        } else {
+            // Add the file
+            $(this).css({'background-color' : '#eee'});
+            $(this).data('selected', 1);
+
+            data = {
+                pk : $(this).data('pk'),
+                title : $(this).data('title'),
+                thumbnail_url : $(this).data('thumbnailurl')
+            }
+
+            new_media.push(data);
+        }
+    });
+
+    // Add existing media to our form
+    $('#modal-add-existing').on('click', function(e){
+        e.preventDefault();
+        $('#media-files').trigger('addFromExisting', [new_media]);
+        $('#existing-media').modal('hide');
+        new_media = [];
+    });
+
+    // Paginator Controls
+    $('#existing-media').on('click', '.page-number', function(){
+        var page_num = $(this).data('page-num');
+        var media_file_ids = []
+
+        $('#current-files .media-file').each(function(index, value){ 
+            media_file_ids.push($(value).data('pk'));
+        });
+
+        $.get("{% url 'media.views.media_addexisting_ajax_partial' %}",
+            $.param({files : media_file_ids, 
+                page : page_num, search_text: search_text}, true), function(data) {
+                $('.modal-body').html(data);
+        });
+    });
+
+    // Search bar in existing media
+    $('#existing-media').on('keyup', '#search-text', function(){
+        // responsiveness is how we control the responsiveness of the auto search
+        // more is less ;) 
+        var responsiveness = 100;
+        var media_file_ids = []
+        var cur_keydown = Date.now();
+        search_text = $(this).val();
+
+        $('#current-files .media-file').each(function(index, value){ 
+            media_file_ids.push($(value).data('pk'));
+        });
+
+        if( (cur_keydown - last_keydown) > responsiveness ) {
+            $.get("{% url 'media.views.media_addexisting_ajax_partial' %}",
+                $.param({
+                    files : media_file_ids, 
+                    search_text : search_text
+                }, true), function(data) {
+                    $('.modal-body').html(data);
+                }
+            );
+        }
+        last_keydown = cur_keydown;
+    });
+});
+</script>

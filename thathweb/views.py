@@ -1,4 +1,7 @@
+import json
+
 from django.views.generic import TemplateView
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.urlresolvers import reverse
@@ -165,3 +168,34 @@ class IncidentReportPage(ThathwebBaseViewNoAuth):
         }
 
         return self.render_to_response(page_data)
+
+
+def incident_geojson(request):
+    '''
+    Returns geoJSON for last 30 incidents
+    '''
+    incident_reports = IncidentReport.objects.all(
+    )
+
+    geojson = {
+        'type': 'FeatureCollection',
+        'features': []
+    }
+
+    for ir in incident_reports:
+        geojson['features'].append(
+            {
+                'type': 'Feautre',
+                'geometry': {
+                    'type': 'Point',
+                    'coordinates': [ir.long, ir.lat],
+                }
+            }
+        )
+
+    response = HttpResponse(
+        json.dumps(geojson),
+        content_type="application/json"
+    )
+
+    return response
