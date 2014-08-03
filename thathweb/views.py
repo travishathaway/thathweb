@@ -160,8 +160,11 @@ class IncidentReportPage(ThathwebBaseViewNoAuth):
     template_name = "incident_report.html"
 
     def get(self, request, *args, **kwargs):
-        incident_reports = IncidentReport.objects.all(
-        ).order_by('-date_time')[:30]
+        incident_reports = IncidentReport.objects.filter(
+            description__contains='WOODSTOCK'
+        ).filter(
+            description__contains='TRAFFIC'
+        ).order_by('-date_time')
 
         page_data = {
             'incident_reports': incident_reports,
@@ -170,32 +173,12 @@ class IncidentReportPage(ThathwebBaseViewNoAuth):
         return self.render_to_response(page_data)
 
 
-def incident_geojson(request):
-    '''
-    Returns geoJSON for last 30 incidents
-    '''
-    incident_reports = IncidentReport.objects.all(
-    )
+class NoSmokingPage(ThathwebBaseViewNoAuth):
+    """
+    Page that shows number of days since my last cigarette
+    """
+    template_name = "no_smoking.html"
 
-    geojson = {
-        'type': 'FeatureCollection',
-        'features': []
-    }
+    def get(self, request, *args, **kwargs):
 
-    for ir in incident_reports:
-        geojson['features'].append(
-            {
-                'type': 'Feautre',
-                'geometry': {
-                    'type': 'Point',
-                    'coordinates': [ir.long, ir.lat],
-                }
-            }
-        )
-
-    response = HttpResponse(
-        json.dumps(geojson),
-        content_type="application/json"
-    )
-
-    return response
+        return self.render_to_response()
