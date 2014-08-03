@@ -157,11 +157,25 @@ class IncidentReportPage(ThathwebBaseViewNoAuth):
     template_name = "incident_report.html"
 
     def get(self, request, *args, **kwargs):
-        incident_reports = IncidentReport.objects.all(
-        ).order_by('-date_time')[:30]
+        incident_reports = IncidentReport.objects.filter(
+            description__contains='WOODSTOCK'
+        ).filter(
+            description__contains='TRAFFIC'
+        ).order_by('-date_time')
 
         page_data = {
             'incident_reports': incident_reports,
         }
 
         return self.render_to_response(page_data)
+
+
+class NoSmokingPage(ThathwebBaseViewNoAuth):
+    """
+    Page that shows number of days since my last cigarette
+    """
+    template_name = "no_smoking.html"
+
+    def get(self, request, *args, **kwargs):
+
+        return self.render_to_response()

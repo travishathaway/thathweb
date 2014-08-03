@@ -128,8 +128,8 @@ class Pictures(ThathwebBaseViewNoAuth):
         )
 
     def filter_pictures(self, request):
-        if request.raw_post_data != '':
-            self.filter_tags = json.loads(request.raw_post_data)
+        if request.body:
+            self.filter_tags = json.loads(request.body)
             for tag in self.filter_tags:
                 self.pictures = self.pictures.filter(picture_tag__name=tag)
             self.pictures = self.pictures.distinct('id');
