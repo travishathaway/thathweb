@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link href="{{STATIC_URL}}css/jquery.fileupload.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<h2>Upload File</h2>
+<div class="col-md-4">
+    {% csrf_token %}
+    <div class="hide alert alert-success">File successfully uploaded</div>
+    <div class="hide alert alert-danger">File failed to upload</div>
+    <div class="form-group">
+        <label for="title" class="control-label"><strong>Title:</strong></label>
+        <input id="title" name="title" type="text" class="form-control">
+        <div class="hide error help-block">Title is a required field</div>
+    </div>
+    <div class="form-group">
+        <label for="caption" class="control-label"><strong>Caption:</strong></label>
+        <textarea id="caption" name="caption" class="form-control"></textarea>
+        <div class="hide error help-block">Caption is a required field</div>
+    </div>
+    <div class="form-group">
+        <label class="control-label" for="fileupload">File:</label>
+        <span class="btn btn-success fileinput-button form-control">
+            <i class="glyphicon glyphicon-plus"></i>
+            <span>Add files...</span>
+            <!-- The file input field used as target for the file upload widget -->
+            <input id="fileupload" type="file" name="files[]" multiple>
+        </span>
+    </div>
+    <div class="form-group">
+        <span class="control-label"><strong>File to upload: </strong><span id="file-name"></span>
+    </div>
+    <div class="form-group">
+        <button id="add-file" class="btn btn-primary pull-left" type="submit" >Add File</button>
+        <div id="uploading" class="hide pull-left">
+        </div>
+    </div>
+    <p id="test"></p>
+</div>
+
+{% endblock %}
+
+{% block js %}
+{{block.super}}
+<script src="{{STATIC_URL}}js/jquery.ui.widget.js"></script>
+<script src="{{STATIC_URL}}js/jquery.iframe-transport.js"></script>
+<script src="{{STATIC_URL}}js/jquery.fileupload.js"></script>
+<script>
+    $(document).ready(function() {
+        var url = "{% url 'media.views.media_add_ajax' %}";
+
+        submission_cleanup = function(){
+            // Clean up the form after submission
+            $('#uploading').addClass('hide');
+            $('.error').addClass('hide');
+            $('.form-group').removeClass('has-error');
+            $('#title').val('');
+            $('#caption').val('');
+            $('#file-name').text('');
+        };
+
+        $('#test').on('allDone', function(){
+            $(this).text('I Heard the event!');
+        });
+
+        validate_form = function(){
+            var errors = 0;
+
+            form_inputs = {
+                title : $('#title').val(),
+                caption : $('#caption').val(),
+                csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val()
+            };
+
+            // Title and the file itself are the only required fields
+            if( form_inputs.title == '' ){
+                $('#title').siblings('.error').removeClass('hide');
+                $('#title').parent().addClass('has-error');
+                errors += 1;
+            } 
+
+            if( errors > 0 ){
+                return false;
+            } else {
+                return form_inputs;
+            }
+        };
+
+        $('#fileupload').fileupload({
+            url: url,
+            dataType: 'json',
+            add : function(e, data) {
+                $.each(data.originalFiles, function(index, value) {
+                    $('#file-name').text(value.name);
+                });
+                $("#add-file").on('click', function () {
+                    data.submit();
+                });
+            },
+            submit : function(e, data) {
+                results = validate_form();
+
+                if( results ) {
+                    data.formData = results;
+                } else {
+                    return false;
+                }
+            },
+            done: function (e, data) {
+                submission_cleanup();
+                if( data.result.success == true ){
+                    $('.alert-success').removeClass('hide');
+
+                    setTimeout( function(){
+                        $('.alert-success').addClass('hide');
+                    }, 3000)
+                } else {
+                    $('.alert-danger').removeClass('hide');
+
+                    setTimeout( function(){
+                        $('.alert-danger').addClass('hide');
+                    }, 3000)
+                }
+            },
+            always: function (e, data) {
+                $("#add-file").off('click');
+            }
+        }).prop('disabled', !$.support.fileInput)
+            .parent().addClass($.support.fileInput ? undefined : 'disabled');
+    });
+</script>
+{% endblock %}

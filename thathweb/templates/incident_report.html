@@ -4,19 +4,38 @@
 
 {% block css %}
 {{block.super}}
- <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+<link rel="stylesheet" href="http://ol3js.org/en/master/css/ol.css" type="text/css">
+    <style>
+      .map {
+        height: 400px;
+        width: 100%;
+      }
+      #popup {
+        width: 170px;
+        height: 40px;
+        margin-left: -92px;
+        margin-bottom: 12px;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: white;
+      }
+    </style>
 {% endblock %}
 
 {% block content %}
+<div id="popup">
+</div>
 <h3>Incident Reports</h3>
+<div id="coords"></div>
 <p>Last 30 Incidents in the Portland area</p>
-<div id="map" style="height: 500px" class="map"></div>
+<button id="popover" data-title="some kewl stff">Stuff</button>
+<div id="map" class="map"></div>
 {% endblock %}
 
 {% block js %}
 {{block.super}}
-<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
-<script src="http://www.mapquestapi.com/sdk/leaflet/v1.0/mq-map.js?key=Fmjtd%7Cluur2q6r29%2C20%3Do5-9a25qw"></script>
+<script src="http://ol3js.org/en/master/build/ol.js" type="text/javascript"></script>
+<!--script src="http://www.mapquestapi.com/sdk/leaflet/v1.0/mq-map.js?key=Fmjtd%7Cluur2q6r29%2C20%3Do5-9a25qw"></script-->
 <script>
 $(document).ready(function(){
     //var map;

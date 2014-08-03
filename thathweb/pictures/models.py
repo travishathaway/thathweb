@@ -1,22 +1,23 @@
-import json
-from thathweb import settings 
+from thathweb import settings
 from django.db import models
 from django.utils.html import format_html
 
+
 class PictureTag(models.Model):
-    title   = models.CharField(max_length=255)
-    name    = models.SlugField(unique=True)
+    title = models.CharField(max_length=255)
+    name = models.SlugField(unique=True)
 
     def __unicode__(self):
         return self.title
 
+
 class Picture(models.Model):
-    title       = models.CharField(max_length=255)
-    path        = models.FilePathField(max_length=255)
+    title = models.CharField(max_length=255)
+    path = models.FilePathField(max_length=255)
     thumbnail_path = models.FilePathField(max_length=255)
-    date_time   = models.DateTimeField(auto_now_add=True)
-    published   = models.BooleanField(default=True)
-    annotation  = models.TextField(null=True)
+    date_time = models.DateTimeField(auto_now_add=True)
+    published = models.BooleanField(default=True)
+    annotation = models.TextField(null=True)
 
     #Relationships
     picture_tag = models.ManyToManyField(PictureTag, null=True, blank=True)
@@ -34,15 +35,17 @@ class Picture(models.Model):
         tag_string = ''
         for tag in self.picture_tag.all():
             tag_string += '<span style="background-color: #ccc">' +\
-                    tag.title + '</span>&nbsp;'
+                tag.title + '</span>&nbsp;'
 
         return format_html(tag_string)
 
     def json_safe(self):
         return {
-            'title' : self.title,
-            'path'  : self.path,
-            'thumbnail_path' : self.thumbnail_path,
-            'date_time' : self.date_time,
-            'picture_tag' : [ {'name' : tag.name, 'title' : tag.title} for tag in self.picture_tag.all() ]
+            'title': self.title,
+            'path': self.path,
+            'thumbnail_path': self.thumbnail_path,
+            'date_time': self.date_time,
+            'picture_tag': [
+                {'name': tag.name, 'title': tag.title} for tag in self.picture_tag.all()
+            ]
         }

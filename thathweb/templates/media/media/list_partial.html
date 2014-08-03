@@ -1,0 +1,26 @@
+{% load thumbnail %}
+{% if page.object_list %}
+<div class="clearfix">
+    {% for file in page.object_list %}
+    <div class="col-md-2 media-file">
+        <a href="{% url 'media.views.media_view' file.pk %}" 
+            title="{{file.title}}">
+            <b>{{file.title|truncatechars:20}}</b>
+            <div style="width:100px; height:75px; overflow:hidden">
+            {% if file.thumbnail == '' %}
+                <img src="{{ STATIC_URL }}img/default_thumbnail.png" title="Default">
+            {% else %}
+            <img src="{{ file.thumbnail.url }}" title="{{file.title}}">
+            {% endif %}
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+<hr>
+{% with page as pager_obj %}
+{% include 'numbered_pagination_controls_ajax.html' %}
+{% endwith %}
+{% else %}
+<p>No Results.</p>
+{% endif %}

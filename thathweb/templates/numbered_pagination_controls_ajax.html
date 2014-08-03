@@ -1,0 +1,39 @@
+<div id="paginator">
+    {% if pager_obj.paginator.num_pages > 1 %}
+        <span class="pull-right">
+            <strong>Page {{pager_obj.number}} of {{pager_obj.paginator.num_pages}}</strong>
+        </span>
+
+        <ul class="pagination">
+            <li>
+            {% if pager_obj.has_previous %}
+            <a href="#" data-page-number="{{ pager_obj.previous_page_number }}" 
+                class="page-number">&lsaquo;&lsaquo;</a>
+            {% else %}
+            <span class="disabled prev">&lsaquo;&lsaquo;</span>
+            {% endif %}
+            </li>
+            {% for page in pager_obj.pages %}
+            <li>
+            {% if page %}
+                {% ifequal page pager_obj.number %}
+                    <span class="current page">{{ page }}</span>
+                {% else %}
+                    <a href="#" data-page-number="{{ page }}" class="page-number">{{ page }}</a>
+                {% endifequal %}
+            {% else %}
+            <span>...</span>
+            {% endif %}
+            </li>
+            {% endfor %}
+            <li>
+            {% if pager_obj.has_next %}
+            <a href="#" data-page-number="{{pager_obj.next_page_number}}"
+                class="page-number">&rsaquo;&rsaquo;</a>
+            {% else %}
+            <span class="disabled next">&rsaquo;&rsaquo;</span>
+            {% endif %}
+            </li>
+        </ul>
+    {% endif %}
+</div>
