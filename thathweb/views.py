@@ -1,4 +1,5 @@
 import json
+import datetime
 
 from django.views.generic import TemplateView
 from django.http import HttpResponse
@@ -181,4 +182,11 @@ class NoSmokingPage(ThathwebBaseViewNoAuth):
 
     def get(self, request, *args, **kwargs):
 
-        return self.render_to_response()
+        quit_time = datetime.datetime(2014,8,2,12,0,0)
+        now = datetime.datetime.now()
+
+        diff = now - quit_time
+        page_data = {
+            'days': diff.days
+        }
+        return self.render_to_response(page_data)

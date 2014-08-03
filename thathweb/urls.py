@@ -5,14 +5,13 @@ admin.autodiscover()
 
 from views import (
     HomePage, LabPage, DownloadsPage, IncidentReportPage,
-    incident_geojson
+    NoSmokingPage
 )
 
 urlpatterns = patterns('',
     url(r'^$', HomePage.as_view()),
     url(r'^lab/$', LabPage.as_view(), name='thathweb.lab'),
     url(r'^pif/$', IncidentReportPage.as_view(), name='incident_report'),
-    url(r'^pif/json/$', incident_geojson),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^mediamanager/', include('thathweb.media.urls')),
     url(r'^accounts/', include('thathweb.accounts.urls')),
@@ -21,6 +20,7 @@ urlpatterns = patterns('',
     url(r'^pictures/', include('thathweb.pictures.urls')),
     url(r'^nacha/',include('thathweb.nacha_creator.urls')),
     url(r'^downloads/', DownloadsPage.as_view() ),
+    url(r'^days-since-last-cigarette/', NoSmokingPage.as_view() ),
     url(r'^admin_tools/', include('admin_tools.urls')),
 )
 
